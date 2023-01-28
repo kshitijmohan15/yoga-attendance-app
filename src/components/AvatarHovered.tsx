@@ -1,5 +1,5 @@
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./HoverCard";
-
+import { FC } from "react";
 type Props = {
 	imgURL: string;
 	user: {
@@ -11,7 +11,7 @@ type Props = {
 	};
 };
 
-const AvatarHovered = ({ imgURL, user }: Props) => {
+const AvatarHovered: FC<Props> = ({ imgURL, user }) => {
 	return (
 		<HoverCard>
 			<HoverCardTrigger className="cursor-pointer">

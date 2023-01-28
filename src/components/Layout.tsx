@@ -1,6 +1,6 @@
 import { Poppins } from "@next/font/google";
 import Head from "next/head";
-import React from "react";
+import React, { FC } from "react";
 
 import { twMerge } from "tailwind-merge";
 type Props = {
@@ -12,7 +12,7 @@ export const DEFAULT_COLORS = () =>
 const poppins = Poppins({
 	weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
-export default function Layout({ children }: Props) {
+const Layout: FC<Props> = ({ children }) => {
 	return (
 		<>
 			<Head>
@@ -29,4 +29,5 @@ export default function Layout({ children }: Props) {
 			</main>
 		</>
 	);
-}
+};
+export default Layout;

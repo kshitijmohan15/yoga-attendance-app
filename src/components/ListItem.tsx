@@ -4,7 +4,7 @@ interface Props {
 	className?: string;
 	children: React.ReactNode;
 }
-const ListItem = ({ className, children }: Props) => {
+const ListItem: FC<Props> = ({ className, children }) => {
 	return (
 		<li className={twMerge("flex items-center font-semibold", className)}>
 			{children}

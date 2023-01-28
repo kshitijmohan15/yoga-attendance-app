@@ -7,9 +7,8 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { FaGoogle } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
 import AvatarHovered from "../components/AvatarHovered";
-type Props = {};
 
-function Index({}: Props) {
+function Index() {
 	const { data: session } = useSession();
 
 	return (

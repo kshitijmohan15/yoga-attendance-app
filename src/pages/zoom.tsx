@@ -2,14 +2,11 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { useAuthStore } from "../store/useAuthStore";
-import { useUserStore } from "../store/useUserStore";
 import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
 import { useAuthData, useGetFromStore } from "../hooks/useZustandHooks";
 
 const Home: NextPage = () => {
-	const {} = process.env;
 	const router = useRouter();
 	const code = router.query.code as string;
 
@@ -54,7 +51,6 @@ const Home: NextPage = () => {
 		},
 	});
 	const { mutate: getMeetings } = trpc.zoom.getMeetings.useMutation({
-		onSuccess: (data) => {},
 		onError: ({ message, data }) => {
 			if (message === "EXPIRED_ACCESS_TOKEN") {
 				refreshTokenMutation({ refreshToken: refreshToken as string });
