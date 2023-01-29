@@ -40,7 +40,7 @@ const Sidebar = () => {
 			exit={{ opacity: 0 }}
 			id="Sidebar"
 			className={twMerge(
-				"top-0 left-0 hidden h-screen w-full transform flex-col items-start justify-start bg-transparent transition duration-500 ease-in-out sm:w-80 md:flex xl:translate-x-0 xl:rounded-r",
+				"top-0 left-0 hidden h-screen w-full transform flex-col items-start justify-start bg-transparent shadow-md transition duration-500 ease-in-out sm:w-80 md:flex xl:translate-x-0 xl:rounded-r",
 				SIDEBAR_DEFAULT_COLORS()
 			)}
 		>

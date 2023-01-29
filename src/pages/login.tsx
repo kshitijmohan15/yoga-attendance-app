@@ -11,38 +11,41 @@ function Index() {
 	const { data: session } = useSession();
 
 	return (
-		<Layout>
-			<section className="relative flex w-full">
-				{session ? <Sidebar /> : null}
-				<div className="relative flex h-screen flex-1 flex-col items-center justify-center">
-					<nav className=" absolute left-0 top-0 flex w-full items-center justify-between px-6 py-4">
-						<ThemeToggle />
-						<ul className="flex items-center justify-center gap-4 text-primary-dark-500 dark:text-primary-light-500">
-							<Button
-								size={"sm"}
-								className=" flex items-center justify-center gap-2 font-semibold"
-								onClick={() =>
-									session ? signOut() : signIn("google")
-								}
-							>
-								{!session ? (
-									<>
-										<FaGoogle />
-										<div>SIGN IN WITH GOOGLE</div>
-									</>
-								) : (
-									<div>SIGN OUT</div>
-								)}
-							</Button>
-							{session?.user?.image && (
-								<AvatarHovered
-									user={session.user}
-									imgURL={session.user.image}
-								/>
-							)}
-						</ul>
-					</nav>
-				</div>
+		<Layout title="Login">
+			<section className="flex h-full w-full items-center justify-center">
+				{!session ? (
+					<div className="mx-auto flex h-auto w-full max-w-xl flex-col rounded-xl bg-white dark:bg-primary-dark-600">
+						<form
+							action=""
+							className="flex h-full w-full flex-col gap-3 px-8 py-12 text-xl font-semibold text-blue-600 dark:text-gray-200"
+						>
+							{/* <h1 className="mb-4 text-4xl text-primary-dark dark:text-white">
+								Login
+							</h1> */}
+							{/* <label className="block ">
+							<span className="text-md font-medium text-gray-500 dark:text-gray-200">
+								Email
+							</span>
+							<input
+								type="text"
+								className="text-md mt-1 w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm"
+							/>
+						</label>
+						<label className="block ">
+							<span className="text-md font-medium text-gray-500 dark:text-gray-200">
+								Password
+							</span>
+							<input
+								type="text"
+								className="text-md mt-1 w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm"
+							/>
+						</label> */}
+							<div className="flex w-full justify-center">
+								<div>TRY LOGGING IN!</div>
+							</div>
+						</form>
+					</div>
+				) : null}
 			</section>
 		</Layout>
 	);
