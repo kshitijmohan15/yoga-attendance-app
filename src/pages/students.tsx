@@ -19,8 +19,8 @@ import { twMerge } from "tailwind-merge";
 import { trpc } from "../utils/trpc";
 import { useSession } from "next-auth/react";
 type CreateStudentType = z.infer<typeof createStudentSchema>;
-type Props = {};
-const CreateStudent: FC<Props> = () => {
+
+const CreateStudent = () => {
 	const {
 		register,
 		handleSubmit,
@@ -36,7 +36,7 @@ const CreateStudent: FC<Props> = () => {
 				email,
 				name,
 				phone,
-				teacherId: session?.user?.id!,
+				teacherId: session?.user?.id as string,
 			});
 		} catch {
 			throw Error("Error creating student");

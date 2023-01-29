@@ -1,5 +1,5 @@
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./HoverCard";
-import { FC } from "react";
+import { type FC } from "react";
 type Props = {
 	imgURL: string;
 	user: {

@@ -1,6 +1,6 @@
 import { Poppins } from "@next/font/google";
 import Head from "next/head";
-import React, { FC } from "react";
+import React, { type FC } from "react";
 
 import { twMerge } from "tailwind-merge";
 import ThemeToggle from "./ThemeToggleButton";

@@ -10,7 +10,7 @@ export const zoomRouter = router({
 				refreshToken: z.string(),
 			})
 		)
-		.mutation(async ({ ctx, input }) => {
+		.mutation(async ({ input }) => {
 			try {
 				const b = Buffer.from(
 					"cfql51F8QvWG0ZwM7o2XoQ" +
