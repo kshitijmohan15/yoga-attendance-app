@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { FC } from "react";
+import { AiOutlineCheck } from "react-icons/ai";
 import {
 	Dialog,
 	DialogContent,
@@ -15,6 +16,8 @@ import { Input } from "../components/Input";
 import { createStudentSchema } from "../schema/studentSchema";
 import { z } from "zod";
 import { twMerge } from "tailwind-merge";
+import { trpc } from "../utils/trpc";
+import { useSession } from "next-auth/react";
 type CreateStudentType = z.infer<typeof createStudentSchema>;
 type Props = {};
 const CreateStudent: FC<Props> = () => {
@@ -25,15 +28,37 @@ const CreateStudent: FC<Props> = () => {
 	} = useForm<CreateStudentType>({
 		resolver: zodResolver(createStudentSchema),
 	});
-
+	const { data: session } = useSession();
 	const onSubmit: SubmitHandler<CreateStudentType> = (data) => {
+		const { email, name, phone } = data;
 		try {
-			console.log(data);
+			mutateStudent({
+				email,
+				name,
+				phone,
+				teacherId: session?.user?.id!,
+			});
 		} catch {
-			console.log("error");
+			throw Error("Error creating student");
 		}
 	};
+	const utils = trpc.useContext();
+	const {
+		data: createdStudent,
+		isLoading: studentInMaking,
+		mutate: mutateStudent,
+		isSuccess: studentCreated,
+	} = trpc.student.createStudent.useMutation({
+		onError: (error) => {
+			console.log("onError", error);
+		},
+		onSuccess: (data) => {
+			utils.student.invalidate();
+		},
+	});
 
+	const { data } = trpc.student.getStudents.useQuery();
+	const students = data?.students;
 	return (
 		<Layout title="Create Student">
 			<section className="flex flex-1 flex-col justify-start">
@@ -42,7 +67,7 @@ const CreateStudent: FC<Props> = () => {
 						<DialogTrigger>
 							<div
 								className={twMerge(
-									"inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-100 dark:bg-blue-200 dark:text-primary-dark dark:hover:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800",
+									"dark:text-bule-800 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-100 dark:bg-blue-200 dark:hover:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800",
 									" bg-blue-300 py-2 px-3 font-semibold text-blue-800 hover:bg-blue-400 "
 								)}
 							>
@@ -110,7 +135,16 @@ const CreateStudent: FC<Props> = () => {
 												className=" bg-green-300 py-2 px-3 font-semibold text-green-800 hover:bg-green-400"
 												type="submit"
 											>
-												Submit
+												{studentInMaking ? (
+													"Updating..."
+												) : studentCreated ? (
+													<AiOutlineCheck
+														color="green"
+														fontSize={25}
+													/>
+												) : (
+													"Add Student"
+												)}
 											</Button>
 										</div>
 									</form>
@@ -119,6 +153,21 @@ const CreateStudent: FC<Props> = () => {
 						</DialogContent>
 					</Dialog>
 				</div>
+				{/* <div className="w-full flex-1">
+					<pre>{JSON.stringify(students, null, 2)}</pre>
+				</div> */}
+				<ul className="mt-4">
+					{students
+						? students.map((student) => (
+								<li
+									key={student.id}
+									className="relative flex cursor-pointer list-none rounded-md p-3 hover:bg-primary-light-600 dark:hover:bg-primary-dark-600"
+								>
+									<div className="">{student.name}</div>
+								</li>
+						  ))
+						: ""}
+				</ul>
 			</section>
 		</Layout>
 	);
