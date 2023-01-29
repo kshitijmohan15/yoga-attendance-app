@@ -1,6 +1,5 @@
-import React from "react";
+import { Inter } from "@next/font/google";
 import ThemeToggle from "../components/ThemeToggleButton";
-import ListItem from "../components/ListItem";
 import Layout from "../components/Layout";
 import { Button } from "../components/Button";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -21,7 +20,7 @@ function Index() {
 						<ul className="flex items-center justify-center gap-4 text-primary-dark-500 dark:text-primary-light-500">
 							<Button
 								size={"sm"}
-								className=" flex items-center justify-center gap-2"
+								className=" flex items-center justify-center gap-2 font-semibold"
 								onClick={() =>
 									session ? signOut() : signIn("google")
 								}
