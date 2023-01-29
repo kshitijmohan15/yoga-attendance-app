@@ -3,6 +3,8 @@ import Layout from "../components/Layout";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { FC } from "react";
+import { capitalize } from "lodash";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { AiOutlineCheck } from "react-icons/ai";
 import {
 	Dialog,
@@ -56,9 +58,23 @@ const CreateStudent = () => {
 			utils.student.invalidate();
 		},
 	});
-
 	const { data } = trpc.student.getStudents.useQuery();
 	const students = data?.students;
+	const cols: any =
+		students &&
+		students[0] &&
+		Object.keys(students[0])
+			.filter(
+				(item) =>
+					item === "name" || item === "email" || item === "phone"
+			)
+			.map((key) => {
+				return {
+					field: key,
+					headerName: capitalize(key),
+					width: 200,
+				};
+			});
 	return (
 		<Layout title="Create Student">
 			<section className="flex flex-1 flex-col justify-start">
@@ -67,7 +83,7 @@ const CreateStudent = () => {
 						<DialogTrigger>
 							<div
 								className={twMerge(
-									"dark:text-bule-800 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-100 dark:bg-blue-200 dark:hover:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800",
+									"dark:text-bule-800 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-100 dark:bg-blue-200 dark:hover:bg-blue-300 dark:hover:text-blue-800 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800",
 									" bg-blue-300 py-2 px-3 font-semibold text-blue-800 hover:bg-blue-400 "
 								)}
 							>
@@ -156,7 +172,7 @@ const CreateStudent = () => {
 				{/* <div className="w-full flex-1">
 					<pre>{JSON.stringify(students, null, 2)}</pre>
 				</div> */}
-				<ul className="mt-4">
+				{/* <ul className="mt-4">
 					{students
 						? students.map((student) => (
 								<li
@@ -167,7 +183,19 @@ const CreateStudent = () => {
 								</li>
 						  ))
 						: ""}
-				</ul>
+				</ul> */}
+				{students && cols && (
+					<DataGrid
+						sx={{ flex: 1 }}
+						rows={students.map((student) => ({
+							id: student.id,
+							name: student.name,
+							email: student.email,
+							phone: student.phone,
+						}))}
+						columns={cols}
+					/>
+				)}
 			</section>
 		</Layout>
 	);
