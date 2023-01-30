@@ -1,5 +1,5 @@
-import { Button } from "../components/Button";
-import Layout from "../components/Layout";
+import { Button } from "../../components/Button";
+import Layout from "../../components/Layout";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { FC } from "react";
@@ -9,17 +9,17 @@ import { AiOutlineCheck } from "react-icons/ai";
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "../components/Modal";
-import { Input } from "../components/Input";
-import { createStudentSchema } from "../schema/studentSchema";
+} from "../../components/Modal";
+import { Input } from "../../components/Input";
+import { createStudentSchema } from "../../schema/studentSchema";
 import { z } from "zod";
 import { twMerge } from "tailwind-merge";
-import { trpc } from "../utils/trpc";
+import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 type CreateStudentType = z.infer<typeof createStudentSchema>;
 
 const CreateStudent = () => {
@@ -60,7 +60,7 @@ const CreateStudent = () => {
 	});
 	const { data } = trpc.student.getStudents.useQuery();
 	const students = data?.students;
-	const cols: any =
+	const cols =
 		students &&
 		students[0] &&
 		Object.keys(students[0])
@@ -169,34 +169,63 @@ const CreateStudent = () => {
 						</DialogContent>
 					</Dialog>
 				</div>
-				{/* <div className="w-full flex-1">
-					<pre>{JSON.stringify(students, null, 2)}</pre>
-				</div> */}
-				{/* <ul className="mt-4">
-					{students
-						? students.map((student) => (
-								<li
-									key={student.id}
-									className="relative flex cursor-pointer list-none rounded-md p-3 hover:bg-primary-light-600 dark:hover:bg-primary-dark-600"
-								>
-									<div className="">{student.name}</div>
-								</li>
-						  ))
-						: ""}
-				</ul> */}
-				{students && cols && (
-					<DataGrid
-						className="bg-white text-indigo-600 dark:bg-primary-dark-600 dark:text-primary-light-500"
-						sx={{ flex: 1 }}
-						rows={students.map((student) => ({
-							id: student.id,
-							name: student.name,
-							email: student.email,
-							phone: student.phone,
-						}))}
-						columns={cols}
-					/>
-				)}
+
+				<div className="flex justify-center">
+					<div className="flex w-full flex-col">
+						<div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+							<div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+								<div className="overflow-hidden">
+									<table className="min-w-full ">
+										<thead className=" border-b bg-primary-light dark:bg-primary-dark">
+											<tr className=" text-gray-500 dark:text-primary-light-600">
+												<th
+													scope="col"
+													className="text-md px-6 py-4 text-left font-semibold"
+												>
+													Name
+												</th>
+												<th
+													scope="col"
+													className="text-md px-6 py-4 text-left font-semibold"
+												>
+													Email
+												</th>
+												<th
+													scope="col"
+													className="text-md px-6 py-4 text-left font-semibold"
+												>
+													Number
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											{students?.map((student) => (
+												<tr className=" rounded-md border-[1px] border-b border-gray-400 bg-primary-light text-primary-dark transition duration-300 ease-in-out hover:bg-gray-100 dark:bg-primary-dark dark:text-primary-light">
+													<td className="cursor-pointer whitespace-nowrap px-6 py-4 text-sm font-medium ">
+														<Link
+															href={
+																"/students/" +
+																student.id
+															}
+														>
+															{student.name}
+														</Link>
+													</td>
+													<td className="whitespace-nowrap px-6 py-4 text-sm font-light ">
+														{student.email}
+													</td>
+													<td className="whitespace-nowrap px-6 py-4 text-sm font-light ">
+														{student.phone}
+													</td>
+												</tr>
+											))}
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</section>
 		</Layout>
 	);

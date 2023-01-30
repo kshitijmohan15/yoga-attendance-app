@@ -40,6 +40,7 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  batch         Batch[]
   student       Student[]
   accounts      Account[]
   sessions      Session[]
@@ -59,8 +60,23 @@ model Student {
   name      String
   email     String   @unique
   phone     String
+  batch     Batch[]
   teacher   User?    @relation(fields: [teacherId], references: [id])
   teacherId String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Batch {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  student   Student? @relation(fields: [studentId], references: [id])
+  studentId String   @db.ObjectId
+  paid      Boolean
+  teacher   User?    @relation(fields: [teacherId], references: [id])
+  teacherId String   @db.ObjectId
+  amount    Int
+  startDate DateTime
+  endDate   DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

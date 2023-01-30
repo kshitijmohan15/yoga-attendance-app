@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { createStudentSchema } from "../../../schema/studentSchema";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 import { z } from "zod";
 
@@ -55,4 +54,27 @@ export const studentRouter = router({
 			});
 		}
 	}),
+	getStudent: protectedProcedure
+		.input(
+			z.object({
+				id: z.string(),
+			})
+		)
+		.query(async ({ ctx, input }) => {
+			const { prisma } = ctx;
+			try {
+				const student = await prisma.student.findUnique({
+					where: {
+						id: input.id,
+					},
+				});
+				return student;
+			} catch (error: any) {
+				// handle error
+				throw new TRPCError({
+					message: error,
+					code: "INTERNAL_SERVER_ERROR",
+				});
+			}
+		}),
 });
