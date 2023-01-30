@@ -186,6 +186,7 @@ const CreateStudent = () => {
 				</ul> */}
 				{students && cols && (
 					<DataGrid
+						className="bg-white text-indigo-600 dark:bg-primary-dark-600 dark:text-primary-light-500"
 						sx={{ flex: 1 }}
 						rows={students.map((student) => ({
 							id: student.id,
