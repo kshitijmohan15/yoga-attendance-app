@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+	/* dark background color */
+	background-color: #15162c;
+}
+
+/* default starter css settings */
+* > * {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+
+}

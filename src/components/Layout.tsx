@@ -26,7 +26,7 @@ const Layout: FC<Props> = ({ children, title }) => {
 			<Head>
 				<title>{title}</title>
 			</Head>
-			<div className="flex h-auto min-h-screen bg-primary-light text-primary-dark-500 dark:bg-primary-dark-500 dark:text-primary-light-500">
+			<div className="flex h-full min-h-screen bg-primary-light text-primary-dark-500 dark:bg-primary-dark-500 dark:text-primary-light-500">
 				{session ? <Sidebar /> : null}
 				<div className=" flex h-full flex-1 flex-col items-center justify-center">
 					<nav className=" sticky left-0 top-0 z-10 flex w-full items-center justify-between px-6 py-4 shadow-md backdrop-blur-md">

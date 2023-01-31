@@ -196,24 +196,24 @@ const CreateStudent = () => {
 						<div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
 							<div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
 								<div className="overflow-hidden">
-									<table className="min-w-full ">
+									<table className="min-w-full">
 										<thead className=" border-b bg-primary-light dark:bg-primary-dark">
 											<tr className=" text-gray-500 dark:text-primary-light-600">
 												<th
 													scope="col"
-													className="text-md px-6 py-4 text-left font-semibold"
+													className="px-6 py-4 text-left text-sm font-semibold"
 												>
 													Name
 												</th>
 												<th
 													scope="col"
-													className="text-md px-6 py-4 text-left font-semibold"
+													className="px-6 py-4 text-left text-sm font-semibold"
 												>
 													Email
 												</th>
 												<th
 													scope="col"
-													className="text-md px-6 py-4 text-left font-semibold"
+													className="px-6 py-4 text-left text-sm font-semibold"
 												>
 													Number
 												</th>
@@ -225,7 +225,7 @@ const CreateStudent = () => {
 													key={student.id}
 													className=" rounded-md border-[1px] border-b border-gray-400 bg-primary-light text-primary-dark transition duration-300 ease-in-out hover:bg-gray-100 dark:bg-primary-dark dark:text-primary-light"
 												>
-													<td className="cursor-pointer whitespace-nowrap px-6 py-4 text-sm font-medium ">
+													<td className="md:text-md cursor-pointer px-1 py-2 text-xs font-medium sm:text-sm lg:text-lg ">
 														<Link
 															href={
 																"/students/" +
@@ -235,10 +235,10 @@ const CreateStudent = () => {
 															{student.name}
 														</Link>
 													</td>
-													<td className="whitespace-nowrap px-6 py-4 text-sm font-light ">
+													<td className=" md:text-md px-1 py-2 text-xs font-light sm:text-sm lg:text-lg  ">
 														{student.email}
 													</td>
-													<td className="whitespace-nowrap px-6 py-4 text-sm font-light ">
+													<td className=" md:text-md px-1 py-2 text-xs font-light sm:text-sm lg:text-lg  ">
 														{student.phone}
 													</td>
 												</tr>

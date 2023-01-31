@@ -22,8 +22,8 @@ const AvatarHovered: FC<Props> = ({ imgURL, user }) => {
 					className="rounded-full"
 				/>
 			</HoverCardTrigger>
-			<HoverCardContent>
-				<div className="space-y-2">
+			<HoverCardContent className="relative">
+				<div className=" space-y-2">
 					<p className="text-sm font-semibold">Hey {user.name}!</p>
 					<p className="text-sm text-gray-300">{user.email}</p>
 				</div>
