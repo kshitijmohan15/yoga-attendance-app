@@ -200,7 +200,10 @@ const CreateStudent = () => {
 										</thead>
 										<tbody>
 											{students?.map((student) => (
-												<tr className=" rounded-md border-[1px] border-b border-gray-400 bg-primary-light text-primary-dark transition duration-300 ease-in-out hover:bg-gray-100 dark:bg-primary-dark dark:text-primary-light">
+												<tr
+													key={student.id}
+													className=" rounded-md border-[1px] border-b border-gray-400 bg-primary-light text-primary-dark transition duration-300 ease-in-out hover:bg-gray-100 dark:bg-primary-dark dark:text-primary-light"
+												>
 													<td className="cursor-pointer whitespace-nowrap px-6 py-4 text-sm font-medium ">
 														<Link
 															href={
