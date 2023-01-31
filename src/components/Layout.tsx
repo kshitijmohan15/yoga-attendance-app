@@ -26,10 +26,10 @@ const Layout: FC<Props> = ({ children, title }) => {
 			<Head>
 				<title>{title}</title>
 			</Head>
-			<div className="flex bg-primary-light text-primary-dark-500 dark:bg-primary-dark-500 dark:text-primary-light-500">
+			<div className="flex h-auto min-h-screen bg-primary-light text-primary-dark-500 dark:bg-primary-dark-500 dark:text-primary-light-500">
 				{session ? <Sidebar /> : null}
-				<div className="relative flex h-screen flex-1 flex-col items-center justify-center">
-					<nav className="left-0 top-0 flex w-full items-center justify-between px-6 py-4 shadow-md">
+				<div className=" flex h-full flex-1 flex-col items-center justify-center">
+					<nav className=" sticky left-0 top-0 z-10 flex w-full items-center justify-between px-6 py-4 shadow-md backdrop-blur-md">
 						<ThemeToggle />
 						<ul className="flex items-center justify-center gap-4 text-primary-dark-500 dark:text-primary-light-500">
 							<Button
@@ -58,7 +58,7 @@ const Layout: FC<Props> = ({ children, title }) => {
 					</nav>
 					<main
 						className={twMerge(
-							"mx-auto flex w-full flex-1 flex-col bg-gradient-to-r px-6 py-4 " +
+							"relative mx-auto flex w-full  flex-col bg-gradient-to-r px-6 py-4 " +
 								poppins.className
 						)}
 					>

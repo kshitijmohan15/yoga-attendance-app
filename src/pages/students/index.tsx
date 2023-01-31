@@ -18,9 +18,25 @@ import { createStudentSchema } from "../../schema/studentSchema";
 import { z } from "zod";
 import { twMerge } from "tailwind-merge";
 import { trpc } from "../../utils/trpc";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import Link from "next/link";
 type CreateStudentType = z.infer<typeof createStudentSchema>;
+export async function getServerSideProps(context: any) {
+	const session = await getSession(context);
+
+	if (!session) {
+		return {
+			redirect: {
+				destination: "/login",
+				permanent: false,
+			},
+		};
+	}
+
+	return {
+		props: { session },
+	};
+}
 
 const CreateStudent = () => {
 	const {
@@ -77,7 +93,7 @@ const CreateStudent = () => {
 			});
 	return (
 		<Layout title="Create Student">
-			<section className="flex flex-1 flex-col justify-start">
+			<section className="flex flex-col justify-start">
 				<div className="flex h-auto w-full justify-start border-b-2 border-primary-light-600 pb-4 dark:border-primary-dark-600">
 					<Dialog>
 						<DialogTrigger>

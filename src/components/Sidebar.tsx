@@ -6,6 +6,7 @@ import { twMerge } from "tailwind-merge";
 import { Button } from "./Button";
 import { procedureTypes } from "@trpc/server";
 import { Inter } from "@next/font/google";
+import Link from "next/link";
 
 const SidebarButton = ({
 	children,
@@ -40,7 +41,7 @@ const Sidebar = () => {
 			exit={{ opacity: 0 }}
 			id="Sidebar"
 			className={twMerge(
-				"top-0 left-0 hidden h-screen w-full transform flex-col items-start justify-start bg-transparent shadow-md transition duration-500 ease-in-out sm:w-80 md:flex xl:translate-x-0 xl:rounded-r",
+				" sticky top-0 left-0 hidden h-screen w-full transform flex-col items-start justify-start bg-transparent shadow-md transition duration-500 ease-in-out sm:w-80 md:flex xl:translate-x-0 xl:rounded-r",
 				SIDEBAR_DEFAULT_COLORS()
 			)}
 		>
@@ -55,13 +56,20 @@ const Sidebar = () => {
 				</p>
 			</div>
 			<div className="mt-6 flex w-full flex-col items-center justify-start space-y-3 p-6 ">
-				<SidebarButton className="flex w-full items-center justify-start space-x-6 rounded ">
+				<SidebarButton className="flex w-full items-center justify-start space-x-6 ">
 					<RxDashboard />
 					<p className="text-lg font-normal leading-4  ">Dashboard</p>
 				</SidebarButton>
-				<SidebarButton className="flex w-full items-center justify-start space-x-6 rounded ">
-					<FaUsers />
-					<p className="text-lg font-normal leading-4">Students</p>
+				<SidebarButton className="flex w-full items-center justify-start space-x-6 ">
+					<Link
+						className="flex w-full items-center justify-start space-x-6"
+						href={"/students"}
+					>
+						<FaUsers />
+						<p className="text-lg font-normal leading-4">
+							Students
+						</p>
+					</Link>
 				</SidebarButton>
 			</div>
 		</motion.div>

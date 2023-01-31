@@ -24,6 +24,7 @@ import { Input } from "../../components/Input";
 import dayjs from "dayjs";
 import { rupee } from "../../lib/constants";
 import ListItem from "../../components/ListItem";
+import { getSession } from "next-auth/react";
 
 const inter = Inter({
 	weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -31,6 +32,24 @@ const inter = Inter({
 function formatAsDate(date: Date) {
 	return dayjs(date).format("DD MMM YYYY");
 }
+
+export async function getServerSideProps(context: any) {
+	const session = await getSession(context);
+
+	if (!session) {
+		return {
+			redirect: {
+				destination: "/login",
+				permanent: false,
+			},
+		};
+	}
+
+	return {
+		props: { session },
+	};
+}
+
 const StudentDetails: FC = () => {
 	const router = useRouter();
 	const { id } = router.query;
@@ -104,7 +123,9 @@ const StudentDetails: FC = () => {
 				</div>
 				<Dialog modal>
 					<DialogTrigger
-						onClick={() => reset()}
+						onClick={() =>
+							reset({ startDate: undefined, endDate: undefined })
+						}
 						className="flex w-36 justify-start"
 					>
 						<div
@@ -236,19 +257,24 @@ const StudentDetails: FC = () => {
 				{batches?.map((batch) => {
 					return (
 						<ListItem
+							key={batch.id}
 							intent={batch.paid ? "paid" : "unpaid"}
 							classNames="items-center"
 						>
-							<div className="flex items-baseline gap-2 ">
-								<div className="text-lg font-semibold">
+							<div className="flex flex-col items-baseline gap-2 sm:flex-row ">
+								<div className="text-sm font-semibold md:text-lg lg:text-xl">
 									{formatAsDate(batch.startDate)}
 								</div>
 								<div className="">to</div>
-								<div className="text-lg font-semibold">
+								<div className="text-sm font-semibold md:text-lg lg:text-xl">
 									{formatAsDate(batch.endDate)}
 								</div>
 							</div>
 							<div className="flex h-full flex-1 items-center justify-end">
+								<p className="text-md font-bold md:text-lg lg:text-2xl">
+									{rupee} {batch.amount}
+								</p>
+
 								<Dialog>
 									<DialogTrigger
 										onClick={() =>
