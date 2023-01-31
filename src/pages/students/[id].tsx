@@ -306,224 +306,165 @@ const StudentDetails: FC = () => {
 								<p className="text-md font-bold md:text-lg lg:text-2xl">
 									{rupee} {batch.amount}
 								</p>
-
-								<Dialog open={updateModalOpen}>
-									<DialogTrigger
-										onClick={() => {
-											reset({
-												startDate: batch.startDate,
-												endDate: batch.endDate,
-												amount: batch.amount,
-												paid: batch.paid,
-											});
-											setUpdateModalOpen(true);
-										}}
-									>
-										<div
-											onClick={() => {
-												setToBeEdited(batch.id);
-											}}
-											className="flex items-center gap-2 px-4"
-										>
-											<RxPencil1
-												size={30}
-												className="rounded-md p-1 shadow-md"
-											/>
-										</div>
-									</DialogTrigger>
-									<DialogContent setOpen={setUpdateModalOpen}>
-										<DialogHeader>
-											<DialogTitle>
-												Edit your batches!
-											</DialogTitle>
-										</DialogHeader>
-										<div className="flex flex-1">
-											<form
-												className=" flex-col gap-4 "
-												onSubmit={handleSubmit(
-													onPatchBatch
-												)}
-											>
-												<div className="grid grid-cols-2 gap-4">
-													<label className="block space-y-1">
-														<span className="text-md   text-gray-500 dark:text-gray-400">
-															Start Date
-														</span>
-														<Controller
-															name={"startDate"}
-															control={control}
-															render={({
-																field: {
-																	onChange,
-																	value,
-																},
-															}) => (
-																<DatePicker
-																	preventOpenOnFocus={
-																		true
-																	}
-																	startOpen={
-																		false
-																	}
-																	selected={
-																		batch.startDate &&
-																		!value
-																			? batch.startDate
-																			: value
-																	}
-																	onChange={
-																		onChange
-																	}
-																	customInput={
-																		<Input className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm" />
-																	}
-																/>
-															)}
-														/>
-
-														{errors.startDate && (
-															<p className="mt-1 text-sm text-red-700">
-																{
-																	errors
-																		.startDate
-																		.message
-																}
-															</p>
-														)}
-													</label>
-													<label className="block space-y-1">
-														<span className="text-md  text-gray-500 dark:text-gray-400">
-															End Date
-														</span>
-														<Controller
-															name={"endDate"}
-															control={control}
-															render={({
-																field: {
-																	onChange,
-																	value,
-																},
-															}) => (
-																<DatePicker
-																	preventOpenOnFocus={
-																		true
-																	}
-																	startOpen={
-																		false
-																	}
-																	selected={
-																		batch.endDate &&
-																		!value
-																			? batch.endDate
-																			: value
-																	}
-																	onChange={
-																		onChange
-																	}
-																	customInput={
-																		<Input className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm" />
-																	}
-																/>
-															)}
-														/>
-														{errors.endDate && (
-															<p className="mt-1 text-sm text-red-700">
-																{
-																	errors
-																		.endDate
-																		.message
-																}
-															</p>
-														)}
-													</label>
-													<label className="block space-y-1">
-														<span className="text-md text-gray-500 dark:text-gray-400">
-															Amount
-														</span>
-														<Input
-															placeholder={
-																rupee + " 1000"
-															}
-															type={"number"}
-															{...register(
-																"amount",
-																{
-																	valueAsNumber:
-																		true,
-																}
-															)}
-															defaultValue={
-																batch.amount
-															}
-															className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm"
-														/>
-														{errors.amount && (
-															<p className="mt-1 text-sm text-red-700">
-																{
-																	errors
-																		.amount
-																		.message
-																}
-															</p>
-														)}
-													</label>
-												</div>
-												<label className="flex items-center justify-center gap-2 pt-6">
-													<span className="text-md text-gray-500 dark:text-gray-400">
-														Paid
-													</span>
-
-													<Controller
-														name={"paid"}
-														control={control}
-														render={({
-															field: {
-																onChange,
-																value,
-															},
-														}) => (
-															<Input
-																onChange={
-																	onChange
-																}
-																type={
-																	"checkbox"
-																}
-																defaultChecked={
-																	value ??
-																	batch.paid
-																}
-																className="h-4 w-4 rounded border-gray-300 text-green-600"
-															/>
-														)}
-													/>
-
-													{errors.paid && (
-														<p className="mt-1 text-sm text-red-700">
-															{
-																errors.paid
-																	.message
-															}
-														</p>
-													)}
-												</label>
-
-												<div className="mt-4 block">
-													<Button
-														className=" bg-green-300 py-2 px-3 font-semibold text-green-800 hover:bg-green-400"
-														type="submit"
-													>
-														Update batch
-													</Button>
-												</div>
-											</form>
-										</div>
-									</DialogContent>
-								</Dialog>
+								<div
+									onClick={() => {
+										setToBeEdited(batch.id);
+										reset({
+											startDate: batch.startDate,
+											endDate: batch.endDate,
+											amount: batch.amount,
+											paid: batch.paid,
+										});
+										setUpdateModalOpen(true);
+									}}
+									className="flex items-center gap-2 px-4"
+								>
+									<RxPencil1
+										size={30}
+										className="rounded-md p-1 shadow-md"
+									/>
+								</div>
 							</div>
 						</ListItem>
 					);
 				})}
+				<Dialog open={updateModalOpen}>
+					<DialogContent setOpen={setUpdateModalOpen}>
+						<DialogHeader>
+							<DialogTitle>Edit your batches!</DialogTitle>
+						</DialogHeader>
+						<div className="flex flex-1">
+							<form
+								className=" flex-col gap-4 "
+								onSubmit={handleSubmit(onPatchBatch)}
+							>
+								<div className="grid grid-cols-2 gap-4">
+									<label className="block space-y-1">
+										<span className="text-md   text-gray-500 dark:text-gray-400">
+											Start Date
+										</span>
+										<Controller
+											name={"startDate"}
+											control={control}
+											render={({
+												field: { onChange, value },
+											}) => (
+												<DatePicker
+													preventOpenOnFocus={true}
+													startOpen={false}
+													selected={
+														watch().startDate &&
+														!value
+															? watch().startDate
+															: value
+													}
+													onChange={onChange}
+													customInput={
+														<Input className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm" />
+													}
+												/>
+											)}
+										/>
+
+										{errors.startDate && (
+											<p className="mt-1 text-sm text-red-700">
+												{errors.startDate.message}
+											</p>
+										)}
+									</label>
+									<label className="block space-y-1">
+										<span className="text-md  text-gray-500 dark:text-gray-400">
+											End Date
+										</span>
+										<Controller
+											name={"endDate"}
+											control={control}
+											render={({
+												field: { onChange, value },
+											}) => (
+												<DatePicker
+													preventOpenOnFocus={true}
+													startOpen={false}
+													selected={
+														watch().endDate &&
+														!value
+															? watch().endDate
+															: value
+													}
+													onChange={onChange}
+													customInput={
+														<Input className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm" />
+													}
+												/>
+											)}
+										/>
+										{errors.endDate && (
+											<p className="mt-1 text-sm text-red-700">
+												{errors.endDate.message}
+											</p>
+										)}
+									</label>
+									<label className="block space-y-1">
+										<span className="text-md text-gray-500 dark:text-gray-400">
+											Amount
+										</span>
+										<Input
+											placeholder={rupee + " 1000"}
+											type={"number"}
+											{...register("amount", {
+												valueAsNumber: true,
+											})}
+											defaultValue={watch().amount}
+											className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm"
+										/>
+										{errors.amount && (
+											<p className="mt-1 text-sm text-red-700">
+												{errors.amount.message}
+											</p>
+										)}
+									</label>
+								</div>
+								<label className="flex items-center justify-center gap-2 pt-6">
+									<span className="text-md text-gray-500 dark:text-gray-400">
+										Paid
+									</span>
+
+									<Controller
+										name={"paid"}
+										control={control}
+										render={({
+											field: { onChange, value },
+										}) => (
+											<Input
+												onChange={onChange}
+												type={"checkbox"}
+												defaultChecked={
+													value ?? watch().paid
+												}
+												className="h-4 w-4 rounded border-gray-300 text-green-600"
+											/>
+										)}
+									/>
+
+									{errors.paid && (
+										<p className="mt-1 text-sm text-red-700">
+											{errors.paid.message}
+										</p>
+									)}
+								</label>
+
+								<div className="mt-4 block">
+									<Button
+										className=" bg-green-300 py-2 px-3 font-semibold text-green-800 hover:bg-green-400"
+										type="submit"
+									>
+										Update Batch
+									</Button>
+								</div>
+							</form>
+						</div>
+					</DialogContent>
+				</Dialog>
 			</div>
 		</Layout>
 	);
