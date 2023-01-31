@@ -2,9 +2,7 @@ import { Button } from "../../components/Button";
 import Layout from "../../components/Layout";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { FC } from "react";
 import { capitalize } from "lodash";
-import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { AiOutlineCheck } from "react-icons/ai";
 import {
 	Dialog,
@@ -13,6 +11,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "../../components/Modal";
+import { useState } from "react";
 import { Input } from "../../components/Input";
 import { createStudentSchema } from "../../schema/studentSchema";
 import { z } from "zod";
@@ -39,10 +38,13 @@ export async function getServerSideProps(context: any) {
 }
 
 const CreateStudent = () => {
+	const [modalOpen, setModalOpen] = useState<boolean>(false);
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
+		reset,
 	} = useForm<CreateStudentType>({
 		resolver: zodResolver(createStudentSchema),
 	});
@@ -96,7 +98,7 @@ const CreateStudent = () => {
 			<section className="flex flex-col justify-start">
 				<div className="flex h-auto w-full justify-start border-b-2 border-primary-light-600 pb-4 dark:border-primary-dark-600">
 					<Dialog>
-						<DialogTrigger>
+						<DialogTrigger onClick={() => reset()}>
 							<div
 								className={twMerge(
 									"dark:text-bule-800 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-100 dark:bg-blue-200 dark:hover:bg-blue-300 dark:hover:text-blue-800 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800",
@@ -106,7 +108,10 @@ const CreateStudent = () => {
 								Add a student
 							</div>
 						</DialogTrigger>
-						<DialogContent className="flex items-center justify-center">
+						<DialogContent
+							setOpen={setModalOpen}
+							className="flex items-center justify-center"
+						>
 							<DialogHeader>
 								<DialogTitle>Add a new student!</DialogTitle>
 								{/* <DialogDescription>

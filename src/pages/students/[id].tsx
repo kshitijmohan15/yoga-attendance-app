@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import { Button } from "../../components/Button";
 import DatePicker from "react-datepicker";
+import { AiOutlineCheck } from "react-icons/ai";
+
 import { RxTrash, RxPencil1 } from "react-icons/rx";
 import "react-datepicker/dist/react-datepicker.css";
 import { Inter } from "@next/font/google";
@@ -63,11 +65,11 @@ const StudentDetails: FC = () => {
 	const {
 		mutateAsync: createBatch,
 		isLoading: creatingBatch,
-		isSuccess: batchCreated,
+		isSuccess: createdBatch,
 	} = trpc.batch.createBatch.useMutation({
-		onSuccess: (data) => {
+		onSuccess: () => {
 			utils.batch.invalidate();
-			// setModalOpen(false);
+			setCreateModalOpen(false);
 			reset();
 		},
 	});
@@ -76,9 +78,10 @@ const StudentDetails: FC = () => {
 		isLoading: batchPatching,
 		isSuccess: batchPatched,
 	} = trpc.batch.editBatch.useMutation({
-		onSuccess: (data) => {
+		onSuccess: () => {
 			utils.batch.invalidate();
-			// setModalOpen(false);
+			console.log("UPDATED!");
+			setUpdateModalOpen(false);
 			reset();
 		},
 	});
@@ -91,7 +94,13 @@ const StudentDetails: FC = () => {
 	};
 	const [toBeEdited, setToBeEdited] = useState<string>("");
 	const onPatchBatch = (data: CreateBatchType) => {
-		editBatch({ ...data, id: toBeEdited });
+		editBatch({
+			amount: data.amount,
+			endDate: data.endDate,
+			paid: data.paid,
+			startDate: data.startDate,
+			id: toBeEdited,
+		});
 	};
 	type CreateBatchType = z.infer<typeof batchSchema>;
 	const {
@@ -105,7 +114,8 @@ const StudentDetails: FC = () => {
 		resolver: zodResolver(batchSchema),
 	});
 
-	const [modalOpen, setModalOpen] = useState<boolean>(false);
+	const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);
+	const [updateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
 	return (
 		<Layout title={"Student Name"}>
 			<div className="flex flex-col gap-4">
@@ -121,11 +131,12 @@ const StudentDetails: FC = () => {
 						</p>
 					</div>
 				</div>
-				<Dialog modal>
+				<Dialog open={createModalOpen}>
 					<DialogTrigger
-						onClick={() =>
-							reset({ startDate: undefined, endDate: undefined })
-						}
+						onClick={() => {
+							reset({ startDate: undefined, endDate: undefined });
+							setCreateModalOpen(true);
+						}}
 						className="flex w-36 justify-start"
 					>
 						<div
@@ -137,7 +148,10 @@ const StudentDetails: FC = () => {
 							New Batch +
 						</div>
 					</DialogTrigger>
-					<DialogContent className="flex items-center justify-center">
+					<DialogContent
+						setOpen={setCreateModalOpen}
+						className="flex items-center justify-center"
+					>
 						<DialogHeader>
 							<DialogTitle>
 								Create a new batch for {student?.name}
@@ -244,11 +258,16 @@ const StudentDetails: FC = () => {
 											className=" bg-green-300 py-2 px-3 font-semibold text-green-800 hover:bg-green-400"
 											type="submit"
 										>
-											Add batch
+											{creatingBatch ? (
+												"Creating..."
+											) : createdBatch ? (
+												<AiOutlineCheck color="green" />
+											) : (
+												"Create"
+											)}
 										</Button>
 									</div>
 								</form>
-								{/* <pre>{JSON.stringify(watch(), null, 2)}</pre>    */}
 							</div>
 						</DialogHeader>
 					</DialogContent>
@@ -275,14 +294,15 @@ const StudentDetails: FC = () => {
 									{rupee} {batch.amount}
 								</p>
 
-								<Dialog>
+								<Dialog open={updateModalOpen}>
 									<DialogTrigger
-										onClick={() =>
+										onClick={() => {
 											reset({
 												startDate: batch.startDate,
 												endDate: batch.endDate,
-											})
-										}
+											});
+											setUpdateModalOpen(true);
+										}}
 									>
 										<div
 											onClick={() => {
@@ -296,12 +316,11 @@ const StudentDetails: FC = () => {
 											/>
 										</div>
 									</DialogTrigger>
-									<DialogContent>
+									<DialogContent setOpen={setUpdateModalOpen}>
 										<DialogHeader>
 											<DialogTitle>
 												Edit your batches!
 											</DialogTitle>
-											<DialogDescription></DialogDescription>
 										</DialogHeader>
 										<div className="flex flex-1">
 											<form
@@ -329,9 +348,10 @@ const StudentDetails: FC = () => {
 																		false
 																	}
 																	selected={
-																		value
-																			? value
-																			: batch.startDate
+																		batch.startDate &&
+																		!value
+																			? batch.startDate
+																			: value
 																	}
 																	onChange={
 																		onChange
@@ -431,17 +451,33 @@ const StudentDetails: FC = () => {
 													<span className="text-md text-gray-500 dark:text-gray-400">
 														Paid
 													</span>
-													<Input
-														{...register("paid")}
-														type={"checkbox"}
-														defaultChecked={
-															batch.paid
-														}
-														className="h-4 w-4 rounded border-gray-300 text-green-600"
+
+													<Controller
+														name={"paid"}
+														control={control}
+														render={({
+															field: {
+																onChange,
+																value,
+															},
+														}) => (
+															<Input
+																onChange={
+																	onChange
+																}
+																type={
+																	"checkbox"
+																}
+																defaultChecked={
+																	batch.paid &&
+																	!value
+																		? batch.paid
+																		: value
+																}
+																className="h-4 w-4 rounded border-gray-300 text-green-600"
+															/>
+														)}
 													/>
-													<div className="text-black">
-														{batch.paid}
-													</div>
 													{errors.paid && (
 														<p className="mt-1 text-sm text-red-700">
 															{
