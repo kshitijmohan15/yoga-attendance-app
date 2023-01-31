@@ -177,7 +177,14 @@ const StudentDetails: FC = () => {
 													field: { onChange, value },
 												}) => (
 													<DatePicker
+														preventOpenOnFocus={
+															true
+														}
 														startOpen={false}
+														autoFocus={false}
+														dateFormat={
+															"dd/MM/yyyy"
+														}
 														selected={value}
 														onChange={onChange}
 														customInput={
@@ -204,7 +211,14 @@ const StudentDetails: FC = () => {
 													field: { onChange, value },
 												}) => (
 													<DatePicker
+														preventOpenOnFocus={
+															true
+														}
 														startOpen={false}
+														autoFocus={false}
+														dateFormat={
+															"dd/MM/yyyy"
+														}
 														selected={value}
 														onChange={onChange}
 														customInput={
@@ -272,7 +286,6 @@ const StudentDetails: FC = () => {
 						</DialogHeader>
 					</DialogContent>
 				</Dialog>
-				{/* <pre>{JSON.stringify(batches, null, 2)}</pre> */}
 				{batches?.map((batch) => {
 					return (
 						<ListItem
@@ -300,6 +313,8 @@ const StudentDetails: FC = () => {
 											reset({
 												startDate: batch.startDate,
 												endDate: batch.endDate,
+												amount: batch.amount,
+												paid: batch.paid,
 											});
 											setUpdateModalOpen(true);
 										}}
@@ -344,6 +359,9 @@ const StudentDetails: FC = () => {
 																},
 															}) => (
 																<DatePicker
+																	preventOpenOnFocus={
+																		true
+																	}
 																	startOpen={
 																		false
 																	}
@@ -387,6 +405,9 @@ const StudentDetails: FC = () => {
 																},
 															}) => (
 																<DatePicker
+																	preventOpenOnFocus={
+																		true
+																	}
 																	startOpen={
 																		false
 																	}
@@ -478,6 +499,7 @@ const StudentDetails: FC = () => {
 															/>
 														)}
 													/>
+
 													{errors.paid && (
 														<p className="mt-1 text-sm text-red-700">
 															{
@@ -487,22 +509,7 @@ const StudentDetails: FC = () => {
 														</p>
 													)}
 												</label>
-												{/* <div className="flex gap-3">
-													<pre>
-														{JSON.stringify(
-															batch,
-															null,
-															2
-														)}
-													</pre>
-													<pre>
-														{JSON.stringify(
-															watch(),
-															null,
-															2
-														)}
-													</pre>
-												</div> */}
+
 												<div className="mt-4 block">
 													<Button
 														className=" bg-green-300 py-2 px-3 font-semibold text-green-800 hover:bg-green-400"
