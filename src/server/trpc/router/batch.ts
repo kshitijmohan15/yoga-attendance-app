@@ -60,4 +60,37 @@ export const batchRouter = router({
 				});
 			}
 		}),
+	editBatch: protectedProcedure
+		.input(
+			z.object({
+				id: z.string(),
+				startDate: z.date(),
+				endDate: z.date(),
+				amount: z.number(),
+				paid: z.boolean(),
+			})
+		)
+		.mutation(async ({ input, ctx }) => {
+			const { prisma } = ctx;
+			const { id, startDate, endDate, amount, paid } = input;
+			try {
+				const batch = await prisma.batch.update({
+					where: {
+						id,
+					},
+					data: {
+						startDate,
+						endDate,
+						amount,
+						paid,
+					},
+				});
+				return batch;
+			} catch (err: any) {
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: err?.message,
+				});
+			}
+		}),
 });
