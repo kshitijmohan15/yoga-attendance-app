@@ -490,10 +490,8 @@ const StudentDetails: FC = () => {
 																	"checkbox"
 																}
 																defaultChecked={
-																	batch.paid &&
-																	!value
-																		? batch.paid
-																		: value
+																	value ??
+																	batch.paid
 																}
 																className="h-4 w-4 rounded border-gray-300 text-green-600"
 															/>
