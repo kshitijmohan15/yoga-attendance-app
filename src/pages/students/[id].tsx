@@ -55,12 +55,13 @@ export async function getServerSideProps(context: any) {
 const StudentDetails: FC = () => {
 	const router = useRouter();
 	const { id } = router.query;
-	const { data: student } = trpc.student.getStudent.useQuery(
-		{
-			id: id as string,
-		},
-		{ refetchOnWindowFocus: false }
-	);
+	const { data: student, isLoading: studentIsLoading } =
+		trpc.student.getStudent.useQuery(
+			{
+				id: id as string,
+			},
+			{ refetchOnWindowFocus: false }
+		);
 
 	const {
 		mutateAsync: createBatch,
@@ -119,18 +120,22 @@ const StudentDetails: FC = () => {
 	return (
 		<Layout title={"Student Name"}>
 			<div className="flex flex-col gap-4">
-				<div>
-					<h1 className="text-4xl">{student?.name}</h1>
-					<div className="flex gap-2">
-						<p className="font-semibold text-gray-600">
-							{student?.email}
-						</p>
-						<span>•</span>
-						<p className="font-semibold text-gray-600">
-							{student?.phone}
-						</p>
+				{!studentIsLoading && student ? (
+					<div>
+						<h1 className="text-4xl">{student?.name}</h1>
+						<div className="flex gap-2">
+							<p className="font-semibold text-gray-600">
+								{student?.email}
+							</p>
+							<span>•</span>
+							<p className="font-semibold text-gray-600">
+								{student?.phone}
+							</p>
+						</div>
 					</div>
-				</div>
+				) : (
+					""
+				)}
 				<Dialog open={createModalOpen}>
 					<DialogTrigger
 						onClick={() => {

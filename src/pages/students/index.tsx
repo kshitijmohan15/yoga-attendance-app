@@ -225,7 +225,7 @@ const CreateStudent = () => {
 													key={student.id}
 													className=" rounded-md border-[1px] border-b border-gray-400 bg-primary-light text-primary-dark transition duration-300 ease-in-out hover:bg-gray-100 dark:bg-primary-dark dark:text-primary-light"
 												>
-													<td className="md:text-md cursor-pointer px-1 py-2 text-xs font-medium sm:text-sm lg:text-lg ">
+													<td className="md:text-md cursor-pointer px-1 py-2 text-xs font-medium transition-colors duration-100 hover:text-blue-600 sm:text-sm lg:text-lg">
 														<Link
 															href={
 																"/students/" +
@@ -235,10 +235,10 @@ const CreateStudent = () => {
 															{student.name}
 														</Link>
 													</td>
-													<td className=" md:text-md px-1 py-2 text-xs font-light sm:text-sm lg:text-lg  ">
+													<td className="md:text-md lg:text-md px-1 py-2 text-xs font-light sm:text-sm">
 														{student.email}
 													</td>
-													<td className=" md:text-md px-1 py-2 text-xs font-light sm:text-sm lg:text-lg  ">
+													<td className="md:text-md lg:text-md px-1 py-2 text-xs font-light sm:text-sm">
 														{student.phone}
 													</td>
 												</tr>
