@@ -27,6 +27,7 @@ import dayjs from "dayjs";
 import { rupee } from "../../lib/constants";
 import ListItem from "../../components/ListItem";
 import { getSession } from "next-auth/react";
+import DeleteModal from "../../components/DeleteStudentModal";
 
 const inter = Inter({
 	weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -86,6 +87,13 @@ const StudentDetails: FC = () => {
 			reset();
 		},
 	});
+
+	const { mutateAsync: deleteBatch } = trpc.batch.deleteBatch.useMutation({
+		onSuccess: () => {
+			utils.batch.invalidate();
+			setDeleteModalOpen(false);
+		},
+	});
 	const { data: batches } = trpc.batch.getBatchesForStudent.useQuery({
 		studentId: id as string,
 	});
@@ -93,7 +101,10 @@ const StudentDetails: FC = () => {
 	const onSubmit = (data: CreateBatchType) => {
 		createBatch({ ...data, studentId: id as string });
 	};
+
+	// to be edited will be passed to the
 	const [toBeEdited, setToBeEdited] = useState<string>("");
+	const [toBeDeleted, setToBeDeleted] = useState<string>("");
 	const onPatchBatch = (data: CreateBatchType) => {
 		editBatch({
 			amount: data.amount,
@@ -117,6 +128,7 @@ const StudentDetails: FC = () => {
 
 	const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);
 	const [updateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
+	const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
 	return (
 		<Layout title={"Student Name"}>
 			<div className="flex flex-col gap-4">
@@ -307,27 +319,41 @@ const StudentDetails: FC = () => {
 									{formatAsDate(batch.endDate)}
 								</div>
 							</div>
-							<div className="flex h-full flex-1 items-center justify-end">
+							<div className="flex h-full flex-1 items-center justify-end gap-3">
 								<p className="text-md font-bold md:text-lg lg:text-2xl">
 									{rupee} {batch.amount}
 								</p>
-								<div
-									onClick={() => {
-										setToBeEdited(batch.id);
-										reset({
-											startDate: batch.startDate,
-											endDate: batch.endDate,
-											amount: batch.amount,
-											paid: batch.paid,
-										});
-										setUpdateModalOpen(true);
-									}}
-									className="flex items-center gap-2 px-4"
-								>
-									<RxPencil1
-										size={30}
-										className="rounded-md p-1 shadow-md"
-									/>
+								<div className="flex gap-1">
+									<div
+										onClick={() => {
+											setToBeEdited(batch.id);
+											reset({
+												startDate: batch.startDate,
+												endDate: batch.endDate,
+												amount: batch.amount,
+												paid: batch.paid,
+											});
+											setUpdateModalOpen(true);
+										}}
+										className="flex items-center"
+									>
+										<RxPencil1
+											size={30}
+											className="rounded-md p-1 shadow-md"
+										/>
+									</div>
+									<div
+										onClick={() => {
+											setToBeDeleted(batch.id);
+											setDeleteModalOpen(true);
+										}}
+										className="flex items-center"
+									>
+										<RxTrash
+											size={30}
+											className="rounded-md p-1 shadow-md"
+										/>
+									</div>
 								</div>
 							</div>
 						</ListItem>
@@ -470,6 +496,11 @@ const StudentDetails: FC = () => {
 						</div>
 					</DialogContent>
 				</Dialog>
+				<DeleteModal
+					onAccept={() => deleteBatch({ id: toBeDeleted })}
+					open={deleteModalOpen}
+					setOpen={setDeleteModalOpen}
+				/>
 			</div>
 		</Layout>
 	);

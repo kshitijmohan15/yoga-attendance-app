@@ -19,6 +19,9 @@ import { twMerge } from "tailwind-merge";
 import { trpc } from "../../utils/trpc";
 import { getSession, useSession } from "next-auth/react";
 import Link from "next/link";
+import { toast } from "react-toastify";
+import { RxPencil1, RxTrash } from "react-icons/rx";
+import DeleteModal from "../../components/DeleteStudentModal";
 type CreateStudentType = z.infer<typeof createStudentSchema>;
 export async function getServerSideProps(context: any) {
 	const session = await getSession(context);
@@ -38,8 +41,6 @@ export async function getServerSideProps(context: any) {
 }
 
 const CreateStudent = () => {
-	const [modalOpen, setModalOpen] = useState<boolean>(false);
-
 	const {
 		register,
 		handleSubmit,
@@ -48,6 +49,7 @@ const CreateStudent = () => {
 	} = useForm<CreateStudentType>({
 		resolver: zodResolver(createStudentSchema),
 	});
+	const utils = trpc.useContext();
 	const { data: session } = useSession();
 	const onSubmit: SubmitHandler<CreateStudentType> = (data) => {
 		const { email, name, phone } = data;
@@ -58,11 +60,11 @@ const CreateStudent = () => {
 				phone,
 				teacherId: session?.user?.id as string,
 			});
-		} catch {
+		} catch (e) {
+			console.log(e);
 			throw Error("Error creating student");
 		}
 	};
-	const utils = trpc.useContext();
 	const {
 		data: createdStudent,
 		isLoading: studentInMaking,
@@ -70,12 +72,16 @@ const CreateStudent = () => {
 		isSuccess: studentCreated,
 	} = trpc.student.createStudent.useMutation({
 		onError: (error) => {
-			console.log("onError", error);
+			toast.error(error.message);
 		},
 		onSuccess: (data) => {
 			utils.student.invalidate();
+			setModalOpen(false);
+			toast.success("Student created successfully");
 		},
 	});
+
+	const [modalOpen, setModalOpen] = useState<boolean>(false);
 	const { data } = trpc.student.getStudents.useQuery();
 	const students = data?.students;
 	const cols =
@@ -93,102 +99,48 @@ const CreateStudent = () => {
 					width: 200,
 				};
 			});
+
+	const [toBeEdited, setToBeEdited] = useState<string>("");
+	const [updateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
+	const { mutateAsync: updateStudent } = trpc.student.editStudent.useMutation(
+		{
+			onError: (error) => {
+				toast.error(error.message);
+			},
+			onSuccess: (data) => {
+				utils.student.invalidate();
+				setUpdateModalOpen(false);
+				toast.success("Student updated successfully");
+			},
+		}
+	);
+	const [toBeDeleted, setToBeDeleted] = useState<string>("");
+	const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
+	const { mutateAsync: deleteStudent } =
+		trpc.student.deleteStudent.useMutation({
+			onError: (error) => {
+				toast.error(error.message);
+			},
+			onSuccess: (data) => {
+				utils.student.invalidate();
+				setDeleteModalOpen(false);
+				toast.success("Student deleted successfully");
+			},
+		});
+
 	return (
 		<Layout title="Create Student">
 			<section className="flex flex-col justify-start">
 				<div className="flex h-auto w-full justify-start border-b-2 border-primary-light-600 pb-4 dark:border-primary-dark-600">
-					<Dialog>
-						<DialogTrigger onClick={() => reset()}>
-							<div
-								className={twMerge(
-									"dark:text-bule-800 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-100 dark:bg-blue-200 dark:hover:bg-blue-300 dark:hover:text-blue-800 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800",
-									" bg-blue-300 py-2 px-3 font-semibold text-blue-800 hover:bg-blue-400 "
-								)}
-							>
-								Add a student
-							</div>
-						</DialogTrigger>
-						<DialogContent
-							setOpen={setModalOpen}
-							className="flex items-center justify-center"
-						>
-							<DialogHeader>
-								<DialogTitle>Add a new student!</DialogTitle>
-								{/* <DialogDescription>
-									Use the form below to add a new student to
-									your class.
-								</DialogDescription> */}
-								<div className="flex flex-1">
-									<form
-										className=" flex-col gap-4 "
-										onSubmit={handleSubmit(onSubmit)}
-									>
-										<div className="grid grid-cols-2 gap-2">
-											<label className="block ">
-												<span className="text-md font-medium text-gray-500 dark:text-gray-200">
-													Name
-												</span>
-												<Input
-													{...register("name")}
-													className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm"
-												/>
-												{errors.name && (
-													<p className="mt-1 text-sm text-red-700">
-														{errors.name.message}
-													</p>
-												)}
-											</label>
-											<label className="block ">
-												<span className="text-md font-medium text-gray-500 dark:text-gray-200">
-													Email
-												</span>
-												<Input
-													{...register("email")}
-													className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm"
-												/>
-												{errors.email && (
-													<p className="mt-1 text-sm text-red-700">
-														{errors.email.message}
-													</p>
-												)}
-											</label>
-											<label className="block ">
-												<span className="text-md font-medium text-gray-500 dark:text-gray-200">
-													Phone
-												</span>
-												<Input
-													{...register("phone")}
-													className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm"
-												/>
-												{errors.phone && (
-													<p className="mt-1 text-sm text-red-700">
-														{errors.phone.message}
-													</p>
-												)}
-											</label>
-										</div>
-										<div className="mt-6 block">
-											<Button
-												className=" bg-green-300 py-2 px-3 font-semibold text-green-800 hover:bg-green-400"
-												type="submit"
-											>
-												{studentInMaking ? (
-													"Updating..."
-												) : studentCreated ? (
-													<AiOutlineCheck
-														color="green"
-														fontSize={25}
-													/>
-												) : (
-													"Add Student"
-												)}
-											</Button>
-										</div>
-									</form>
-								</div>
-							</DialogHeader>
-						</DialogContent>
-					</Dialog>
+					<div
+						className={twMerge(
+							"dark:text-bule-800 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-100 dark:bg-blue-200 dark:hover:bg-blue-300 dark:hover:text-blue-800 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800",
+							" bg-blue-300 py-2 px-3 font-semibold text-blue-800 hover:bg-blue-400 "
+						)}
+						onClick={() => setModalOpen(true)}
+					>
+						Add a student
+					</div>
 				</div>
 
 				<div className="flex justify-center">
@@ -225,21 +177,62 @@ const CreateStudent = () => {
 													key={student.id}
 													className=" rounded-md border-[1px] border-b border-gray-400 bg-primary-light text-primary-dark transition duration-300 ease-in-out hover:bg-gray-100 dark:bg-primary-dark dark:text-primary-light"
 												>
-													<td className="md:text-md cursor-pointer px-1 py-2 text-xs font-medium transition-colors duration-100 hover:text-blue-600 sm:text-sm lg:text-lg">
-														<Link
-															href={
-																"/students/" +
-																student.id
-															}
-														>
+													<Link
+														href={
+															"/students/" +
+															student.id
+														}
+													>
+														<td className="md:text-md cursor-pointer px-1 py-2 text-xs font-medium transition-colors duration-100 hover:text-blue-600 sm:text-sm lg:text-lg">
 															{student.name}
-														</Link>
-													</td>
+														</td>
+													</Link>
 													<td className="md:text-md lg:text-md px-1 py-2 text-xs font-light sm:text-sm">
 														{student.email}
 													</td>
 													<td className="md:text-md lg:text-md px-1 py-2 text-xs font-light sm:text-sm">
 														{student.phone}
+													</td>
+													<td>
+														<div
+															onClick={() => {
+																setToBeEdited(
+																	student.id
+																);
+																reset({
+																	email: student.email,
+																	name: student.name,
+																	phone: student.phone,
+																});
+																setUpdateModalOpen(
+																	true
+																);
+															}}
+															className="flex cursor-pointer items-center"
+														>
+															<RxPencil1
+																size={30}
+																className="rounded-md p-1 shadow-md"
+															/>
+														</div>
+													</td>
+													<td>
+														<div
+															onClick={() => {
+																setToBeDeleted(
+																	student.id
+																);
+																setDeleteModalOpen(
+																	true
+																);
+															}}
+															className="flex cursor-pointer items-center"
+														>
+															<RxTrash
+																size={30}
+																className="rounded-md p-1 shadow-md"
+															/>
+														</div>
 													</td>
 												</tr>
 											))}
@@ -250,6 +243,166 @@ const CreateStudent = () => {
 						</div>
 					</div>
 				</div>
+				<Dialog open={updateModalOpen}>
+					<DialogContent setOpen={setUpdateModalOpen}>
+						<DialogHeader>
+							<DialogTitle>Edit your batches!</DialogTitle>
+						</DialogHeader>
+						<div className="flex flex-1">
+							<form
+								className=" flex-col gap-4 "
+								onSubmit={handleSubmit((data) => {
+									updateStudent({ ...data, id: toBeEdited });
+								})}
+							>
+								<div className="grid grid-cols-2 gap-4">
+									<label className="block ">
+										<span className="text-md font-medium text-gray-500 dark:text-gray-200">
+											Name
+										</span>
+										<Input
+											{...register("name")}
+											className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm"
+										/>
+										{errors.name && (
+											<p className="mt-1 text-sm text-red-700">
+												{errors.name.message}
+											</p>
+										)}
+									</label>
+									<label className="block ">
+										<span className="text-md font-medium text-gray-500 dark:text-gray-200">
+											Email
+										</span>
+										<Input
+											{...register("email")}
+											className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm"
+										/>
+										{errors.email && (
+											<p className="mt-1 text-sm text-red-700">
+												{errors.email.message}
+											</p>
+										)}
+									</label>
+									<label className="block ">
+										<span className="text-md font-medium text-gray-500 dark:text-gray-200">
+											Phone
+										</span>
+										<Input
+											type={"number"}
+											{...register("phone")}
+											className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm"
+										/>
+										{errors.phone && (
+											<p className="mt-1 text-sm text-red-700">
+												{errors.phone.message}
+											</p>
+										)}
+									</label>
+								</div>
+								<div className="mt-4 block">
+									<Button
+										className=" bg-green-300 py-2 px-3 font-semibold text-green-800 hover:bg-green-400"
+										type="submit"
+									>
+										Update Batch
+									</Button>
+								</div>
+							</form>
+						</div>
+					</DialogContent>
+				</Dialog>
+				<Dialog open={modalOpen}>
+					<DialogTrigger onClick={() => reset({})}></DialogTrigger>
+					<DialogContent
+						setOpen={setModalOpen}
+						className="flex items-center justify-center"
+					>
+						<DialogHeader>
+							<DialogTitle>Add a new student!</DialogTitle>
+							{/* <DialogDescription>
+									Use the form below to add a new student to
+									your class.
+								</DialogDescription> */}
+							<div className="flex flex-1">
+								<form
+									className=" flex-col gap-4 "
+									onSubmit={handleSubmit(onSubmit)}
+								>
+									<div className="grid grid-cols-2 gap-2">
+										<label className="block ">
+											<span className="text-md font-medium text-gray-500 dark:text-gray-200">
+												Name
+											</span>
+											<Input
+												{...register("name")}
+												className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm"
+											/>
+											{errors.name && (
+												<p className="mt-1 text-sm text-red-700">
+													{errors.name.message}
+												</p>
+											)}
+										</label>
+										<label className="block ">
+											<span className="text-md font-medium text-gray-500 dark:text-gray-200">
+												Email
+											</span>
+											<Input
+												{...register("email")}
+												className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm"
+											/>
+											{errors.email && (
+												<p className="mt-1 text-sm text-red-700">
+													{errors.email.message}
+												</p>
+											)}
+										</label>
+										<label className="block ">
+											<span className="text-md font-medium text-gray-500 dark:text-gray-200">
+												Phone
+											</span>
+											<Input
+												type={"number"}
+												{...register("phone")}
+												className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm"
+											/>
+											{errors.phone && (
+												<p className="mt-1 text-sm text-red-700">
+													{errors.phone.message}
+												</p>
+											)}
+										</label>
+									</div>
+									<div className="mt-6 block">
+										<Button
+											className=" bg-green-300 py-2 px-3 font-semibold text-green-800 hover:bg-green-400"
+											type="submit"
+										>
+											{studentInMaking ? (
+												"Updating..."
+											) : studentCreated ? (
+												<AiOutlineCheck
+													color="green"
+													fontSize={25}
+												/>
+											) : (
+												"Add Student"
+											)}
+										</Button>
+									</div>
+								</form>
+							</div>
+						</DialogHeader>
+					</DialogContent>
+				</Dialog>
+				<DeleteModal
+					onAccept={() => {
+						deleteStudent({ id: toBeDeleted });
+					}}
+					open={deleteModalOpen}
+					setOpen={setDeleteModalOpen}
+				/>
 			</section>
 		</Layout>
 	);

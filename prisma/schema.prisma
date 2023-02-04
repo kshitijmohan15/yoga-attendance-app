@@ -69,7 +69,7 @@ model Student {
 
 model Batch {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  student   Student? @relation(fields: [studentId], references: [id])
+  student   Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId String   @db.ObjectId
   paid      Boolean
   teacher   User?    @relation(fields: [teacherId], references: [id])

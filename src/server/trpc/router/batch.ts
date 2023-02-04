@@ -93,4 +93,27 @@ export const batchRouter = router({
 				});
 			}
 		}),
+	deleteBatch: protectedProcedure
+		.input(
+			z.object({
+				id: z.string(),
+			})
+		)
+		.mutation(async ({ input, ctx }) => {
+			const { prisma } = ctx;
+			const { id } = input;
+			try {
+				const batch = await prisma.batch.delete({
+					where: {
+						id,
+					},
+				});
+				return batch;
+			} catch (err: any) {
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: err?.message,
+				});
+			}
+		}),
 });

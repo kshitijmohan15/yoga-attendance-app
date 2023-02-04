@@ -35,6 +35,65 @@ export const studentRouter = router({
 				});
 			}
 		}),
+	editStudent: protectedProcedure
+		.input(
+			z.object({
+				id: z.string(),
+				name: z.string(),
+				email: z.string(),
+				phone: z.string(),
+			})
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { prisma } = ctx;
+			try {
+				const student = await prisma.student.update({
+					where: {
+						id: input.id,
+					},
+					data: {
+						email: input.email,
+						name: input.name,
+						phone: input.phone,
+					},
+				});
+				return {
+					student,
+				};
+			} catch (error: any) {
+				// handle error
+				throw new TRPCError({
+					message: error,
+					code: "INTERNAL_SERVER_ERROR",
+				});
+			}
+		}),
+	deleteStudent: protectedProcedure
+		.input(
+			z.object({
+				id: z.string(),
+			})
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { prisma } = ctx;
+			try {
+				const student = await prisma.student.delete({
+					where: {
+						id: input.id,
+					},
+				});
+
+				return {
+					student,
+				};
+			} catch (error: any) {
+				// handle error
+				throw new TRPCError({
+					message: error,
+					code: "INTERNAL_SERVER_ERROR",
+				});
+			}
+		}),
 	getStudents: protectedProcedure.query(async ({ ctx }) => {
 		const { prisma } = ctx;
 		try {
