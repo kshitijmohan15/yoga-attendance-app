@@ -9,7 +9,7 @@ import { randomBytes, randomUUID } from "crypto";
 export const authOptions: NextAuthOptions = {
 	// Include user.id on session
 	callbacks: {
-		session({ session, user, token }) {
+		session({ session, token }) {
 			if (session.user) {
 				session.user.id = token.sub!;
 			}

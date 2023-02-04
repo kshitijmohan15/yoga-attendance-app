@@ -1,6 +1,6 @@
 import { Button } from "../../components/Button";
 import Layout from "../../components/Layout";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { capitalize } from "lodash";
 import { AiOutlineCheck } from "react-icons/ai";

@@ -1,11 +1,5 @@
-import { Inter } from "@next/font/google";
-import ThemeToggle from "../components/ThemeToggleButton";
 import Layout from "../components/Layout";
-import { Button } from "../components/Button";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { FaGoogle } from "react-icons/fa";
-import Sidebar from "../components/Sidebar";
-import AvatarHovered from "../components/AvatarHovered";
+import { useSession } from "next-auth/react";
 
 function Index() {
 	const { data: session } = useSession();

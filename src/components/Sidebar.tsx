@@ -1,10 +1,9 @@
 import React from "react";
 import { RxDashboard } from "react-icons/rx";
 import { FaUsers } from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import { Button } from "./Button";
-import { procedureTypes } from "@trpc/server";
 import { Inter } from "@next/font/google";
 import Link from "next/link";
 

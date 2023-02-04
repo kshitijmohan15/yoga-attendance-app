@@ -4,10 +4,9 @@ import {
 	DialogDescription,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from "./Modal";
 import { FC } from "react";
-import { Dispatch, SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import { Button } from "./Button";
 type Props = {
 	setOpen: Dispatch<SetStateAction<boolean>>;
