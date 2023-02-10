@@ -148,161 +148,182 @@ const StudentDetails: FC = () => {
 				) : (
 					""
 				)}
-				<Dialog open={createModalOpen}>
-					<DialogTrigger
-						onClick={() => {
-							reset({ startDate: undefined, endDate: undefined });
-							setCreateModalOpen(true);
-						}}
-						className="flex w-36 justify-start"
-					>
-						<div
-							className={twMerge(
-								"dark:text-bule-800 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-100 dark:bg-blue-200 dark:hover:bg-blue-300 dark:hover:text-blue-800 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800",
-								" bg-blue-300 py-2 px-3 font-semibold text-blue-800 hover:bg-blue-400 "
-							)}
+				<div className="flex w-full gap-4">
+					<Dialog open={createModalOpen}>
+						<DialogTrigger
+							onClick={() => {
+								reset({
+									startDate: undefined,
+									endDate: undefined,
+								});
+								setCreateModalOpen(true);
+							}}
+							className="flex w-36 justify-start"
 						>
-							New Batch +
-						</div>
-					</DialogTrigger>
-					<DialogContent
-						setOpen={setCreateModalOpen}
-						className="flex items-center justify-center"
-					>
-						<DialogHeader>
-							<DialogTitle>
-								Create a new batch for {student?.name}
-							</DialogTitle>
-							{/* <DialogDescription>
-									Use the form below to add a new student to
-									your class.
-								</DialogDescription> */}
-							<div className="flex flex-1">
-								<form
-									className=" flex-col gap-4 "
-									onSubmit={handleSubmit(onSubmit)}
-								>
-									<div className="grid grid-cols-2 gap-4">
-										<label className="block space-y-1">
-											<span className="text-md   text-gray-500 dark:text-gray-400">
-												Start Date
-											</span>
-											<Controller
-												name={"startDate"}
-												control={control}
-												render={({
-													field: { onChange, value },
-												}) => (
-													<DatePicker
-														preventOpenOnFocus={
-															true
+							<div
+								className={twMerge(
+									"dark:text-bule-800 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-100 dark:bg-blue-200 dark:hover:bg-blue-300 dark:hover:text-blue-800 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800",
+									" flex-1 bg-blue-300 py-2 px-3 font-semibold text-blue-800 hover:bg-blue-400 "
+								)}
+							>
+								New Batch +
+							</div>
+						</DialogTrigger>
+						<DialogContent
+							setOpen={setCreateModalOpen}
+							className="flex items-center justify-center"
+						>
+							<DialogHeader>
+								<DialogTitle>
+									Create a new batch for {student?.name}
+								</DialogTitle>
+								{/* <DialogDescription>
+										Use the form below to add a new student to
+										your class.
+									</DialogDescription> */}
+								<div className="flex flex-1">
+									<form
+										className=" flex-col gap-4 "
+										onSubmit={handleSubmit(onSubmit)}
+									>
+										<div className="grid grid-cols-2 gap-4">
+											<label className="block space-y-1">
+												<span className="text-md   text-gray-500 dark:text-gray-400">
+													Start Date
+												</span>
+												<Controller
+													name={"startDate"}
+													control={control}
+													render={({
+														field: {
+															onChange,
+															value,
+														},
+													}) => (
+														<DatePicker
+															preventOpenOnFocus={
+																true
+															}
+															startOpen={false}
+															autoFocus={false}
+															dateFormat={
+																"dd/MM/yyyy"
+															}
+															selected={value}
+															onChange={onChange}
+															customInput={
+																<Input className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm" />
+															}
+														/>
+													)}
+												/>
+												{errors.startDate && (
+													<p className="mt-1 text-sm text-red-700">
+														{
+															errors.startDate
+																.message
 														}
-														startOpen={false}
-														autoFocus={false}
-														dateFormat={
-															"dd/MM/yyyy"
-														}
-														selected={value}
-														onChange={onChange}
-														customInput={
-															<Input className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm" />
-														}
-													/>
+													</p>
 												)}
-											/>
-
-											{errors.startDate && (
-												<p className="mt-1 text-sm text-red-700">
-													{errors.startDate.message}
-												</p>
-											)}
-										</label>
-										<label className="block space-y-1">
-											<span className="text-md  text-gray-500 dark:text-gray-400">
-												End Date
-											</span>
-											<Controller
-												name={"endDate"}
-												control={control}
-												render={({
-													field: { onChange, value },
-												}) => (
-													<DatePicker
-														preventOpenOnFocus={
-															true
-														}
-														startOpen={false}
-														autoFocus={false}
-														dateFormat={
-															"dd/MM/yyyy"
-														}
-														selected={value}
-														onChange={onChange}
-														customInput={
-															<Input className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm" />
-														}
-													/>
+											</label>
+											<label className="block space-y-1">
+												<span className="text-md  text-gray-500 dark:text-gray-400">
+													End Date
+												</span>
+												<Controller
+													name={"endDate"}
+													control={control}
+													render={({
+														field: {
+															onChange,
+															value,
+														},
+													}) => (
+														<DatePicker
+															preventOpenOnFocus={
+																true
+															}
+															startOpen={false}
+															autoFocus={false}
+															dateFormat={
+																"dd/MM/yyyy"
+															}
+															selected={value}
+															onChange={onChange}
+															customInput={
+																<Input className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm" />
+															}
+														/>
+													)}
+												/>
+												{errors.endDate && (
+													<p className="mt-1 text-sm text-red-700">
+														{errors.endDate.message}
+													</p>
 												)}
-											/>
-											{errors.endDate && (
-												<p className="mt-1 text-sm text-red-700">
-													{errors.endDate.message}
-												</p>
-											)}
-										</label>
-										<label className="block space-y-1">
+											</label>
+											<label className="block space-y-1">
+												<span className="text-md text-gray-500 dark:text-gray-400">
+													Amount
+												</span>
+												<Input
+													placeholder={
+														rupee + " 1000"
+													}
+													type={"number"}
+													{...register("amount", {
+														valueAsNumber: true,
+													})}
+													className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm"
+												/>
+												{errors.amount && (
+													<p className="mt-1 text-sm text-red-700">
+														{errors.amount.message}
+													</p>
+												)}
+											</label>
+										</div>
+										<label className="flex items-center justify-center gap-2 pt-6">
 											<span className="text-md text-gray-500 dark:text-gray-400">
-												Amount
+												Paid
 											</span>
 											<Input
-												placeholder={rupee + " 1000"}
-												type={"number"}
-												{...register("amount", {
-													valueAsNumber: true,
-												})}
-												className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm"
+												{...register("paid")}
+												type={"checkbox"}
+												className="h-4 w-4 rounded border-gray-300 text-green-600"
 											/>
-											{errors.amount && (
+											{errors.paid && (
 												<p className="mt-1 text-sm text-red-700">
-													{errors.amount.message}
+													{errors.paid.message}
 												</p>
 											)}
 										</label>
-									</div>
-									<label className="flex items-center justify-center gap-2 pt-6">
-										<span className="text-md text-gray-500 dark:text-gray-400">
-											Paid
-										</span>
-										<Input
-											{...register("paid")}
-											type={"checkbox"}
-											className="h-4 w-4 rounded border-gray-300 text-green-600"
-										/>
-										{errors.paid && (
-											<p className="mt-1 text-sm text-red-700">
-												{errors.paid.message}
-											</p>
-										)}
-									</label>
-									<div className="mt-4 block">
-										<Button
-											className=" bg-green-300 py-2 px-3 font-semibold text-green-800 hover:bg-green-400"
-											type="submit"
-										>
-											{creatingBatch ? (
-												"Creating..."
-											) : createdBatch ? (
-												<AiOutlineCheck color="green" />
-											) : (
-												"Create"
-											)}
-										</Button>
-									</div>
-								</form>
-							</div>
-						</DialogHeader>
-					</DialogContent>
-				</Dialog>
+										<div className="mt-4 block">
+											<Button
+												className=" bg-green-300 py-2 px-3 font-semibold text-green-800 hover:bg-green-400"
+												type="submit"
+											>
+												{creatingBatch ? (
+													"Creating..."
+												) : createdBatch ? (
+													<AiOutlineCheck color="green" />
+												) : (
+													"Create"
+												)}
+											</Button>
+										</div>
+									</form>
+								</div>
+							</DialogHeader>
+						</DialogContent>
+					</Dialog>
+					<Button
+						className="h-9 bg-gray-500 text-white"
+						onClick={() => router.back()}
+					>
+						Go back
+					</Button>
+				</div>
 				{batches?.map((batch) => {
 					return (
 						<ListItem

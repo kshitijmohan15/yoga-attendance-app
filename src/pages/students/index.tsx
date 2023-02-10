@@ -2,7 +2,7 @@ import { Button } from "../../components/Button";
 import Layout from "../../components/Layout";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { capitalize } from "lodash";
+import { capitalize, debounce } from "lodash";
 import { AiOutlineCheck } from "react-icons/ai";
 import {
 	Dialog,
@@ -11,7 +11,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "../../components/Modal";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Input } from "../../components/Input";
 import { createStudentSchema } from "../../schema/studentSchema";
 import { z } from "zod";
@@ -22,6 +22,7 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { RxPencil1, RxTrash } from "react-icons/rx";
 import DeleteModal from "../../components/DeleteStudentModal";
+import DataTable from "../../components/DataTable";
 type CreateStudentType = z.infer<typeof createStudentSchema>;
 export async function getServerSideProps(context: any) {
 	const session = await getSession(context);
@@ -81,8 +82,16 @@ const CreateStudent = () => {
 		},
 	});
 
+	useEffect(() => {
+		console.log("mount");
+		return () => {
+			console.log("unmount");
+		};
+	});
+
 	const [modalOpen, setModalOpen] = useState<boolean>(false);
-	const { data } = trpc.student.getStudents.useQuery();
+	const { data, isLoading: studentsAreComing } =
+		trpc.student.getStudents.useQuery();
 	const students = data?.students;
 	const cols =
 		students &&
@@ -128,27 +137,39 @@ const CreateStudent = () => {
 			},
 		});
 
+	const [searchTerm, setSearchTerm] = useState<string>("");
+
+	const handleSearch = (e: any) => {
+		setSearchTerm(e.target.value);
+	};
+	const debouncedHandleSearch = useCallback(debounce(handleSearch, 300), []);
 	return (
 		<Layout title="Create Student">
 			<section className="flex flex-col justify-start">
-				<div className="flex h-auto w-full justify-start border-b-2 border-primary-light-600 pb-4 dark:border-primary-dark-600">
+				<div className="flex h-auto w-full items-center justify-between border-b-2 border-primary-light-600 pb-4 dark:border-primary-dark-600">
 					<div
 						className={twMerge(
 							"dark:text-bule-800 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-100 dark:bg-blue-200 dark:hover:bg-blue-300 dark:hover:text-blue-800 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800",
-							" bg-blue-300 py-2 px-3 font-semibold text-blue-800 hover:bg-blue-400 "
+							" cursor-pointer bg-blue-300 py-2 px-3 font-semibold text-blue-800 hover:bg-blue-400"
 						)}
 						onClick={() => setModalOpen(true)}
 					>
 						Add a student
 					</div>
+
+					<Input
+						onChange={(e) => debouncedHandleSearch(e)}
+						placeholder="Search"
+						className="w-[6rem] rounded-md border-[3px] border-blue-200 md:w-40 lg:w-60"
+					/>
 				</div>
 
 				<div className="flex justify-center">
 					<div className="flex w-full flex-col">
 						<div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
 							<div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-								<div className="overflow-hidden">
-									<table className="min-w-full">
+								<div className="overflow-auto">
+									{/* <table className="">
 										<thead className=" border-b bg-primary-light dark:bg-primary-dark">
 											<tr className=" text-gray-500 dark:text-primary-light-600">
 												<th
@@ -172,72 +193,91 @@ const CreateStudent = () => {
 											</tr>
 										</thead>
 										<tbody>
-											{students?.map((student) => (
-												<tr
-													key={student.id}
-													className=" rounded-md border-[1px] border-b border-gray-400 bg-primary-light text-primary-dark transition duration-300 ease-in-out hover:bg-gray-100 dark:bg-primary-dark dark:text-primary-light"
-												>
-													<Link
-														href={
-															"/students/" +
-															student.id
-														}
+											{students
+												?.filter((i) =>
+													i.name
+														.toLowerCase()
+														.includes(
+															searchTerm.toLowerCase()
+														)
+												)
+												?.map((student) => (
+													<tr
+														key={student.id}
+														className=" rounded-md border-[1px] border-b border-gray-400 bg-primary-light text-primary-dark transition duration-300 ease-in-out hover:bg-gray-100 dark:bg-primary-dark dark:text-primary-light"
 													>
-														<td className="md:text-md cursor-pointer px-1 py-2 text-xs font-medium transition-colors duration-100 hover:text-blue-600 sm:text-sm lg:text-lg">
-															{student.name}
+														<Link
+															href={
+																"/students/" +
+																student.id
+															}
+														>
+															<td className="md:text-md cursor-pointer px-1 py-2 text-xs font-medium transition-colors duration-100 hover:text-blue-600 sm:text-sm lg:text-lg">
+																{student.name}
+															</td>
+														</Link>
+														<td className="md:text-md lg:text-md px-1 py-2 text-xs font-light sm:text-sm">
+															{student.email}
 														</td>
-													</Link>
-													<td className="md:text-md lg:text-md px-1 py-2 text-xs font-light sm:text-sm">
-														{student.email}
-													</td>
-													<td className="md:text-md lg:text-md px-1 py-2 text-xs font-light sm:text-sm">
-														{student.phone}
-													</td>
-													<td>
-														<div
-															onClick={() => {
-																setToBeEdited(
-																	student.id
-																);
-																reset({
-																	email: student.email,
-																	name: student.name,
-																	phone: student.phone,
-																});
-																setUpdateModalOpen(
-																	true
-																);
-															}}
-															className="flex cursor-pointer items-center"
-														>
-															<RxPencil1
-																size={30}
-																className="rounded-md p-1 shadow-md"
-															/>
-														</div>
-													</td>
-													<td>
-														<div
-															onClick={() => {
-																setToBeDeleted(
-																	student.id
-																);
-																setDeleteModalOpen(
-																	true
-																);
-															}}
-															className="flex cursor-pointer items-center"
-														>
-															<RxTrash
-																size={30}
-																className="rounded-md p-1 shadow-md"
-															/>
-														</div>
-													</td>
-												</tr>
-											))}
+														<td className="md:text-md lg:text-md px-1 py-2 text-xs font-light sm:text-sm">
+															{student.phone}
+														</td>
+														<td>
+															<div
+																onClick={() => {
+																	setToBeEdited(
+																		student.id
+																	);
+																	reset({
+																		email: student.email,
+																		name: student.name,
+																		phone: student.phone,
+																	});
+																	setUpdateModalOpen(
+																		true
+																	);
+																}}
+																className="flex cursor-pointer items-center"
+															>
+																<RxPencil1
+																	size={30}
+																	className="rounded-md p-1 shadow-md"
+																/>
+															</div>
+														</td>
+														<td>
+															<div
+																onClick={() => {
+																	setToBeDeleted(
+																		student.id
+																	);
+																	setDeleteModalOpen(
+																		true
+																	);
+																}}
+																className="flex cursor-pointer items-center"
+															>
+																<RxTrash
+																	size={30}
+																	className="rounded-md p-1 shadow-md"
+																/>
+															</div>
+														</td>
+													</tr>
+												))}
 										</tbody>
-									</table>
+									</table> */}
+									{students ? (
+										<DataTable
+											data={students?.filter((i) =>
+												i.name
+													.toLowerCase()
+													.includes(
+														searchTerm.toLowerCase()
+													)
+											)}
+										/>
+									) : null}
 								</div>
 							</div>
 						</div>
