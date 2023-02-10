@@ -7,7 +7,7 @@ const columns: GridColDef[] = [
 	{
 		field: "name",
 		headerName: "Name",
-		width: 100,
+		width: 150,
 		renderCell(params) {
 			return (
 				<Link
@@ -19,7 +19,7 @@ const columns: GridColDef[] = [
 			);
 		},
 	},
-	{ field: "phone", headerName: "Phone", width: 100 },
+	{ field: "phone", headerName: "Phone", width: 150 },
 	{ field: "email", headerName: "Email", width: 200 },
 ];
 

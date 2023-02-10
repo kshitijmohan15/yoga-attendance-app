@@ -51,6 +51,9 @@ export const batchRouter = router({
 					where: {
 						studentId,
 					},
+					orderBy: {
+						startDate: "desc",
+					},
 				});
 				return batches;
 			} catch (err: any) {

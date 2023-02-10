@@ -23,6 +23,8 @@ import { toast } from "react-toastify";
 import { RxPencil1, RxTrash } from "react-icons/rx";
 import DeleteModal from "../../components/DeleteStudentModal";
 import DataTable from "../../components/DataTable";
+import { ListSkeleton } from "../../components/ListSkeleton";
+
 type CreateStudentType = z.infer<typeof createStudentSchema>;
 export async function getServerSideProps(context: any) {
 	const session = await getSession(context);
@@ -169,104 +171,6 @@ const CreateStudent = () => {
 						<div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
 							<div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
 								<div className="overflow-auto">
-									{/* <table className="">
-										<thead className=" border-b bg-primary-light dark:bg-primary-dark">
-											<tr className=" text-gray-500 dark:text-primary-light-600">
-												<th
-													scope="col"
-													className="px-6 py-4 text-left text-sm font-semibold"
-												>
-													Name
-												</th>
-												<th
-													scope="col"
-													className="px-6 py-4 text-left text-sm font-semibold"
-												>
-													Email
-												</th>
-												<th
-													scope="col"
-													className="px-6 py-4 text-left text-sm font-semibold"
-												>
-													Number
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											{students
-												?.filter((i) =>
-													i.name
-														.toLowerCase()
-														.includes(
-															searchTerm.toLowerCase()
-														)
-												)
-												?.map((student) => (
-													<tr
-														key={student.id}
-														className=" rounded-md border-[1px] border-b border-gray-400 bg-primary-light text-primary-dark transition duration-300 ease-in-out hover:bg-gray-100 dark:bg-primary-dark dark:text-primary-light"
-													>
-														<Link
-															href={
-																"/students/" +
-																student.id
-															}
-														>
-															<td className="md:text-md cursor-pointer px-1 py-2 text-xs font-medium transition-colors duration-100 hover:text-blue-600 sm:text-sm lg:text-lg">
-																{student.name}
-															</td>
-														</Link>
-														<td className="md:text-md lg:text-md px-1 py-2 text-xs font-light sm:text-sm">
-															{student.email}
-														</td>
-														<td className="md:text-md lg:text-md px-1 py-2 text-xs font-light sm:text-sm">
-															{student.phone}
-														</td>
-														<td>
-															<div
-																onClick={() => {
-																	setToBeEdited(
-																		student.id
-																	);
-																	reset({
-																		email: student.email,
-																		name: student.name,
-																		phone: student.phone,
-																	});
-																	setUpdateModalOpen(
-																		true
-																	);
-																}}
-																className="flex cursor-pointer items-center"
-															>
-																<RxPencil1
-																	size={30}
-																	className="rounded-md p-1 shadow-md"
-																/>
-															</div>
-														</td>
-														<td>
-															<div
-																onClick={() => {
-																	setToBeDeleted(
-																		student.id
-																	);
-																	setDeleteModalOpen(
-																		true
-																	);
-																}}
-																className="flex cursor-pointer items-center"
-															>
-																<RxTrash
-																	size={30}
-																	className="rounded-md p-1 shadow-md"
-																/>
-															</div>
-														</td>
-													</tr>
-												))}
-										</tbody>
-									</table> */}
 									{students ? (
 										<DataTable
 											data={students?.filter((i) =>
@@ -278,6 +182,7 @@ const CreateStudent = () => {
 											)}
 										/>
 									) : null}
+									{studentsAreComing && <ListSkeleton />}
 								</div>
 							</div>
 						</div>
