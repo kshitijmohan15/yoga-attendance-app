@@ -5,4 +5,5 @@ export const batchSchema = z.object({
 	endDate: z.date(),
 	paid: z.boolean(),
 	amount: z.number(),
+	isPaused: z.boolean().nullable(),
 });

@@ -75,6 +75,7 @@ model Batch {
   teacher   User?    @relation(fields: [teacherId], references: [id])
   teacherId String   @db.ObjectId
   amount    Int
+  isPaused  Boolean?
   startDate DateTime
   endDate   DateTime
   createdAt DateTime @default(now())

@@ -112,6 +112,7 @@ const StudentDetails: FC = () => {
 			paid: data.paid,
 			startDate: data.startDate,
 			id: toBeEdited,
+			isPaused: data.isPaused,
 		});
 	};
 	type CreateBatchType = z.infer<typeof batchSchema>;
@@ -283,21 +284,41 @@ const StudentDetails: FC = () => {
 												)}
 											</label>
 										</div>
-										<label className="flex items-center justify-center gap-2 pt-6">
-											<span className="text-md text-gray-500 dark:text-gray-400">
-												Paid
-											</span>
-											<Input
-												{...register("paid")}
-												type={"checkbox"}
-												className="h-4 w-4 rounded border-gray-300 text-green-600"
-											/>
-											{errors.paid && (
-												<p className="mt-1 text-sm text-red-700">
-													{errors.paid.message}
-												</p>
-											)}
-										</label>
+										<div className="flex w-full justify-center gap-4">
+											<label className="flex items-center justify-center gap-2 pt-6">
+												<span className="text-md text-gray-500 dark:text-gray-400">
+													Paid
+												</span>
+												<Input
+													{...register("paid")}
+													type={"checkbox"}
+													className="h-4 w-4 rounded border-gray-300 text-green-600"
+												/>
+												{errors.paid && (
+													<p className="mt-1 text-sm text-red-700">
+														{errors.paid.message}
+													</p>
+												)}
+											</label>
+											<label className="flex items-center justify-center gap-2 pt-6">
+												<span className="text-md text-gray-500 dark:text-gray-400">
+													Pause
+												</span>
+												<Input
+													{...register("isPaused")}
+													type={"checkbox"}
+													className="h-4 w-4 rounded border-gray-300 text-green-600"
+												/>
+												{errors.isPaused && (
+													<p className="mt-1 text-sm text-red-700">
+														{
+															errors.isPaused
+																.message
+														}
+													</p>
+												)}
+											</label>
+										</div>
 										<div className="mt-4 block">
 											<Button
 												className=" bg-green-300 py-2 px-3 font-semibold text-green-800 hover:bg-green-400"
@@ -328,7 +349,13 @@ const StudentDetails: FC = () => {
 					return (
 						<ListItem
 							key={batch.id}
-							intent={batch.paid ? "paid" : "unpaid"}
+							intent={
+								batch.isPaused
+									? "paused"
+									: batch.paid
+									? "paid"
+									: "unpaid"
+							}
 							classNames="items-center"
 						>
 							<div className="flex flex-col items-baseline gap-2 sm:flex-row ">
@@ -353,6 +380,7 @@ const StudentDetails: FC = () => {
 												endDate: batch.endDate,
 												amount: batch.amount,
 												paid: batch.paid,
+												isPaused: batch.isPaused,
 											});
 											setUpdateModalOpen(true);
 										}}
@@ -476,34 +504,39 @@ const StudentDetails: FC = () => {
 										)}
 									</label>
 								</div>
-								<label className="flex items-center justify-center gap-2 pt-6">
-									<span className="text-md text-gray-500 dark:text-gray-400">
-										Paid
-									</span>
-
-									<Controller
-										name={"paid"}
-										control={control}
-										render={({
-											field: { onChange, value },
-										}) => (
-											<Input
-												onChange={onChange}
-												type={"checkbox"}
-												defaultChecked={
-													value ?? watch().paid
-												}
-												className="h-4 w-4 rounded border-gray-300 text-green-600"
-											/>
+								<div className="flex w-full justify-center gap-4">
+									<label className="flex items-center justify-center gap-2 pt-6">
+										<span className="text-md text-gray-500 dark:text-gray-400">
+											Paid
+										</span>
+										<Input
+											{...register("paid")}
+											type={"checkbox"}
+											className="h-4 w-4 rounded border-gray-300 text-green-600"
+										/>
+										{errors.paid && (
+											<p className="mt-1 text-sm text-red-700">
+												{errors.paid.message}
+											</p>
 										)}
-									/>
-
-									{errors.paid && (
-										<p className="mt-1 text-sm text-red-700">
-											{errors.paid.message}
-										</p>
-									)}
-								</label>
+									</label>
+									<label className="flex items-center justify-center gap-2 pt-6">
+										<span className="text-md text-gray-500 dark:text-gray-400">
+											Pause
+										</span>
+										<Input
+											{...register("isPaused")}
+											type={"checkbox"}
+											className="h-4 w-4 rounded border-gray-300 text-green-600"
+										/>
+										{errors.isPaused && (
+											<p className="mt-1 text-sm text-red-700">
+												{errors.isPaused.message}
+											</p>
+										)}
+									</label>
+								</div>
+								<pre>{JSON.stringify(watch(), null, 2)}</pre>
 
 								<div className="mt-4 block">
 									<Button

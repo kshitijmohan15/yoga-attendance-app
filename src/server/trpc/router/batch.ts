@@ -11,10 +11,12 @@ export const batchRouter = router({
 				endDate: z.date(),
 				amount: z.number(),
 				paid: z.boolean(),
+				isPaused: z.boolean().nullable(),
 			})
 		)
 		.mutation(async ({ input, ctx }) => {
-			const { studentId, startDate, endDate, amount, paid } = input;
+			const { studentId, startDate, endDate, amount, paid, isPaused } =
+				input;
 			const {
 				prisma,
 				session: {
@@ -29,6 +31,7 @@ export const batchRouter = router({
 						amount,
 						startDate,
 						endDate,
+						isPaused,
 						student: { connect: { id: studentId } },
 						teacher: { connect: { id: teacherId } },
 					},
@@ -70,12 +73,13 @@ export const batchRouter = router({
 				startDate: z.date(),
 				endDate: z.date(),
 				amount: z.number(),
+				isPaused: z.boolean().nullable(),
 				paid: z.boolean(),
 			})
 		)
 		.mutation(async ({ input, ctx }) => {
 			const { prisma } = ctx;
-			const { id, startDate, endDate, amount, paid } = input;
+			const { id, startDate, endDate, amount, paid, isPaused } = input;
 			try {
 				const batch = await prisma.batch.update({
 					where: {
@@ -86,6 +90,7 @@ export const batchRouter = router({
 						endDate,
 						amount,
 						paid,
+						isPaused,
 					},
 				});
 				return batch;
