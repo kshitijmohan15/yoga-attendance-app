@@ -345,69 +345,71 @@ const StudentDetails: FC = () => {
 						Go back
 					</Button>
 				</div>
-				{batches?.map((batch) => {
-					return (
-						<ListItem
-							key={batch.id}
-							intent={
-								batch.isPaused
-									? "paused"
-									: batch.paid
-									? "paid"
-									: "unpaid"
-							}
-							classNames="items-center"
-						>
-							<div className="flex flex-col items-baseline gap-2 sm:flex-row ">
-								<div className="text-sm font-semibold md:text-lg lg:text-xl">
-									{formatAsDate(batch.startDate)}
-								</div>
-								<div className="">to</div>
-								<div className="text-sm font-semibold md:text-lg lg:text-xl">
-									{formatAsDate(batch.endDate)}
-								</div>
-							</div>
-							<div className="flex h-full flex-1 items-center justify-end gap-3">
-								<p className="text-md font-bold md:text-lg lg:text-2xl">
-									{rupee} {batch.amount}
-								</p>
-								<div className="flex gap-1">
-									<div
-										onClick={() => {
-											setToBeEdited(batch.id);
-											reset({
-												startDate: batch.startDate,
-												endDate: batch.endDate,
-												amount: batch.amount,
-												paid: batch.paid,
-												isPaused: batch.isPaused,
-											});
-											setUpdateModalOpen(true);
-										}}
-										className="flex items-center"
-									>
-										<RxPencil1
-											size={30}
-											className="rounded-md p-1 shadow-md"
-										/>
+				<div className="flex h-96 w-full flex-col gap-4 overflow-auto">
+					{batches?.map((batch) => {
+						return (
+							<ListItem
+								key={batch.id}
+								intent={
+									batch.isPaused
+										? "paused"
+										: batch.paid
+										? "paid"
+										: "unpaid"
+								}
+								classNames="items-center"
+							>
+								<div className="flex flex-col items-baseline gap-2 sm:flex-row ">
+									<div className="text-sm font-semibold md:text-lg lg:text-xl">
+										{formatAsDate(batch.startDate)}
 									</div>
-									<div
-										onClick={() => {
-											setToBeDeleted(batch.id);
-											setDeleteModalOpen(true);
-										}}
-										className="flex items-center"
-									>
-										<RxTrash
-											size={30}
-											className="rounded-md p-1 shadow-md"
-										/>
+									<div className="">to</div>
+									<div className="text-sm font-semibold md:text-lg lg:text-xl">
+										{formatAsDate(batch.endDate)}
 									</div>
 								</div>
-							</div>
-						</ListItem>
-					);
-				})}
+								<div className="flex h-full flex-1 items-center justify-end gap-3">
+									<p className="text-md font-bold md:text-lg lg:text-2xl">
+										{rupee} {batch.amount}
+									</p>
+									<div className="flex gap-1">
+										<div
+											onClick={() => {
+												setToBeEdited(batch.id);
+												reset({
+													startDate: batch.startDate,
+													endDate: batch.endDate,
+													amount: batch.amount,
+													paid: batch.paid,
+													isPaused: batch.isPaused,
+												});
+												setUpdateModalOpen(true);
+											}}
+											className="flex items-center"
+										>
+											<RxPencil1
+												size={30}
+												className="rounded-md p-1 shadow-md"
+											/>
+										</div>
+										<div
+											onClick={() => {
+												setToBeDeleted(batch.id);
+												setDeleteModalOpen(true);
+											}}
+											className="flex items-center"
+										>
+											<RxTrash
+												size={30}
+												className="rounded-md p-1 shadow-md"
+											/>
+										</div>
+									</div>
+								</div>
+							</ListItem>
+						);
+					})}
+				</div>
 				<Dialog open={updateModalOpen}>
 					<DialogContent setOpen={setUpdateModalOpen}>
 						<DialogHeader>
