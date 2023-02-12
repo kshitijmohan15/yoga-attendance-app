@@ -5,11 +5,12 @@ import React, { type FC } from "react";
 import { twMerge } from "tailwind-merge";
 import ThemeToggle from "./ThemeToggleButton";
 import { Button } from "./Button";
-import { FaGoogle } from "react-icons/fa";
+import { FaGoogle, FaUsers } from "react-icons/fa";
 import AvatarHovered from "./AvatarHovered";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Sidebar from "./Sidebar";
 import { AnimatePresence } from "framer-motion";
+import Link from "next/link";
 type Props = {
 	children: React.ReactNode;
 	title?: string;
@@ -36,6 +37,15 @@ const Layout: FC<Props> = ({ children, title }) => {
 					<div className=" flex h-full flex-1 flex-col items-center justify-center">
 						<nav className=" sticky left-0 top-0 z-10 flex w-full items-center justify-between px-6 py-4 shadow-md backdrop-blur-md">
 							<ThemeToggle />
+							<ul>
+								<Link
+									href="/students"
+									className="flex items-center gap-2 px-2 py-1 shadow-md"
+								>
+									<FaUsers />
+									Students
+								</Link>
+							</ul>
 							<ul className="flex items-center justify-center gap-4 text-primary-dark-500 dark:text-primary-light-500">
 								<Button
 									size={"sm"}

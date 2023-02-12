@@ -2,16 +2,16 @@ import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import { getSession, useSession } from "next-auth/react";
 
-export const getServerSideProps = async (context: any) => {
-	const session = await getSession(context);
-	if (session) {
-		return {
-			redirect: {
-				destination: "/students",
-			},
-		};
-	}
-};
+// export const getServerSideProps = async (context: any) => {
+// 	const session = await getSession(context);
+// 	if (session) {
+// 		return {
+// 			redirect: {
+// 				destination: "/students",
+// 			},
+// 		};
+// 	}
+// };
 
 function Index() {
 	const { data: session } = useSession();
