@@ -24,6 +24,7 @@ import { RxPencil1, RxTrash } from "react-icons/rx";
 import DeleteModal from "../../components/DeleteStudentModal";
 import DataTable from "../../components/DataTable";
 import { ListSkeleton } from "../../components/ListSkeleton";
+import { QueryClient } from "@tanstack/react-query";
 
 type CreateStudentType = z.infer<typeof createStudentSchema>;
 export async function getServerSideProps(context: any) {
@@ -55,12 +56,9 @@ const CreateStudent = () => {
 	const utils = trpc.useContext();
 	const { data: session } = useSession();
 	const onSubmit: SubmitHandler<CreateStudentType> = (data) => {
-		const { email, name, phone } = data;
 		try {
 			mutateStudent({
-				email,
-				name,
-				phone,
+				...data,
 				teacherId: session?.user?.id as string,
 			});
 		} catch (e) {
@@ -78,9 +76,9 @@ const CreateStudent = () => {
 			toast.error(error.message);
 		},
 		onSuccess: (data) => {
+			toast.success("Student created successfully");
 			utils.student.invalidate();
 			setModalOpen(false);
-			toast.success("Student created successfully");
 		},
 	});
 

@@ -28,6 +28,8 @@ import { rupee } from "../../lib/constants";
 import ListItem from "../../components/ListItem";
 import { getSession } from "next-auth/react";
 import DeleteModal from "../../components/DeleteStudentModal";
+import { ListSkeletonBatches } from "../../components/ListSkeleton";
+import { QueryClient } from "@tanstack/react-query";
 
 const inter = Inter({
 	weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -47,7 +49,8 @@ export async function getServerSideProps(context: any) {
 			},
 		};
 	}
-
+	const queryClient = new QueryClient();
+	queryClient.prefetchQuery(["student", context.params.id], () => {});
 	return {
 		props: { session },
 	};
@@ -57,12 +60,9 @@ const StudentDetails: FC = () => {
 	const router = useRouter();
 	const { id } = router.query;
 	const { data: student, isLoading: studentIsLoading } =
-		trpc.student.getStudent.useQuery(
-			{
-				id: id as string,
-			},
-			{ refetchOnWindowFocus: false }
-		);
+		trpc.student.getStudent.useQuery({
+			id: id as string,
+		});
 
 	const {
 		mutateAsync: createBatch,
@@ -91,12 +91,14 @@ const StudentDetails: FC = () => {
 	const { mutateAsync: deleteBatch } = trpc.batch.deleteBatch.useMutation({
 		onSuccess: () => {
 			utils.batch.invalidate();
+
 			setDeleteModalOpen(false);
 		},
 	});
-	const { data: batches } = trpc.batch.getBatchesForStudent.useQuery({
-		studentId: id as string,
-	});
+	const { data: batches, isLoading: batchesAreLoading } =
+		trpc.batch.getBatchesForStudent.useQuery({
+			studentId: id as string,
+		});
 	const utils = trpc.useContext();
 	const onSubmit = (data: CreateBatchType) => {
 		createBatch({ ...data, studentId: id as string });
@@ -346,6 +348,7 @@ const StudentDetails: FC = () => {
 					</Button>
 				</div>
 				<div className="flex h-96 w-full flex-col gap-4 overflow-auto">
+					{batchesAreLoading ? <ListSkeletonBatches /> : null}
 					{batches?.map((batch) => {
 						return (
 							<ListItem

@@ -16,3 +16,13 @@ export const ListSkeleton = () => {
 		</div>
 	);
 };
+
+export const ListSkeletonBatches = () => {
+	return (
+		<div className="cursor-progress">
+			<Skeleton sx={{ height: "7rem" }} height={50} animation="wave" />
+			<Skeleton sx={{ height: "7rem" }} height={50} animation="wave" />
+			<Skeleton sx={{ height: "7rem" }} height={50} animation="wave" />
+		</div>
+	);
+};

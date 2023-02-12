@@ -22,6 +22,7 @@
     "@radix-ui/react-dialog": "^1.0.2",
     "@radix-ui/react-hover-card": "^1.0.3",
     "@tanstack/react-query": "^4.16.0",
+    "@tanstack/react-query-devtools": "^4.24.4",
     "@trpc/client": "^10.0.0",
     "@trpc/next": "^10.0.0",
     "@trpc/react-query": "^10.0.0",
