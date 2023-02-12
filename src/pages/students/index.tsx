@@ -11,7 +11,6 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "../../components/Modal";
-import * as dayjs from "dayjs";
 import { useCallback, useEffect, useState } from "react";
 import { Input } from "../../components/Input";
 import { createStudentSchema } from "../../schema/studentSchema";
@@ -19,13 +18,10 @@ import { z } from "zod";
 import { twMerge } from "tailwind-merge";
 import { trpc } from "../../utils/trpc";
 import { getSession, useSession } from "next-auth/react";
-import Link from "next/link";
 import { toast } from "react-toastify";
-import { RxPencil1, RxTrash } from "react-icons/rx";
 import DeleteModal from "../../components/DeleteStudentModal";
 import DataTable from "../../components/DataTable";
 import { ListSkeleton } from "../../components/ListSkeleton";
-import { QueryClient } from "@tanstack/react-query";
 
 type CreateStudentType = z.infer<typeof createStudentSchema>;
 export async function getServerSideProps(context: any) {
@@ -68,7 +64,6 @@ const CreateStudent = () => {
 		}
 	};
 	const {
-		data: createdStudent,
 		isLoading: studentInMaking,
 		mutate: mutateStudent,
 		isSuccess: studentCreated,
@@ -93,21 +88,6 @@ const CreateStudent = () => {
 	const { data, isLoading: studentsAreComing } =
 		trpc.student.getStudents.useQuery();
 	const students = data?.students;
-	const cols =
-		students &&
-		students[0] &&
-		Object.keys(students[0])
-			.filter(
-				(item) =>
-					item === "name" || item === "email" || item === "phone"
-			)
-			.map((key) => {
-				return {
-					field: key,
-					headerName: capitalize(key),
-					width: 200,
-				};
-			});
 
 	const [toBeEdited, setToBeEdited] = useState<string>("");
 	const [updateModalOpen, setUpdateModalOpen] = useState<boolean>(false);

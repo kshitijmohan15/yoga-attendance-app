@@ -1,10 +1,8 @@
 import * as React from "react";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { Batch, Student } from "@prisma/client";
 import Link from "next/link";
 import isBetween from "dayjs/plugin/isBetween";
-import { cva, type VariantProps } from "class-variance-authority";
-import { twMerge } from "tailwind-merge";
 import {
 	Tooltip,
 	TooltipContent,
