@@ -74,6 +74,7 @@ const CreateStudent = () => {
 		onSuccess: (data) => {
 			toast.success("Student created successfully");
 			utils.student.invalidate();
+			reset();
 			setModalOpen(false);
 		},
 	});
