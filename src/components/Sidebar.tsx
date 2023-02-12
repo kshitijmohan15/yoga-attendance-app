@@ -32,7 +32,11 @@ export const SIDEBAR_DEFAULT_COLORS = () =>
 const inter = Inter({
 	weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
-const Sidebar = () => {
+const Sidebar = ({
+	setShowSidebar,
+}: {
+	setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
@@ -44,7 +48,7 @@ const Sidebar = () => {
 				SIDEBAR_DEFAULT_COLORS()
 			)}
 		>
-			<div className="items-center justify-start space-x-3 whitespace-nowrap px-6 py-4 xl:flex  ">
+			<div className="items-center justify-between space-x-3 whitespace-nowrap px-6 py-4 xl:flex  ">
 				<p
 					className={
 						"w-full  text-3xl font-semibold leading-6" +

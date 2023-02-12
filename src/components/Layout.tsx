@@ -9,6 +9,7 @@ import { FaGoogle } from "react-icons/fa";
 import AvatarHovered from "./AvatarHovered";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Sidebar from "./Sidebar";
+import { AnimatePresence } from "framer-motion";
 type Props = {
 	children: React.ReactNode;
 	title?: string;
@@ -21,50 +22,55 @@ const poppins = Poppins({
 });
 const Layout: FC<Props> = ({ children, title }) => {
 	const { data: session } = useSession();
+	const [showSidebar, setShowSidebar] = React.useState(true);
 	return (
 		<>
 			<Head>
 				<title>{title}</title>
 			</Head>
-			<div className="flex h-full min-h-screen bg-primary-light text-primary-dark-500 dark:bg-primary-dark-500 dark:text-primary-light-500">
-				{session ? <Sidebar /> : null}
-				<div className=" flex h-full flex-1 flex-col items-center justify-center">
-					<nav className=" sticky left-0 top-0 z-10 flex w-full items-center justify-between px-6 py-4 shadow-md backdrop-blur-md">
-						<ThemeToggle />
-						<ul className="flex items-center justify-center gap-4 text-primary-dark-500 dark:text-primary-light-500">
-							<Button
-								size={"sm"}
-								className=" flex items-center justify-center gap-2 font-semibold"
-								onClick={() =>
-									session ? signOut() : signIn("google")
-								}
-							>
-								{!session ? (
-									<>
-										<FaGoogle />
-										<div>SIGN IN WITH GOOGLE</div>
-									</>
-								) : (
-									<div>SIGN OUT</div>
+			<div className="flex h-full min-h-screen overflow-hidden bg-primary-light text-primary-dark-500 dark:bg-primary-dark-500 dark:text-primary-light-500">
+				<AnimatePresence>
+					{session && showSidebar ? (
+						<Sidebar setShowSidebar={setShowSidebar} />
+					) : null}
+					<div className=" flex h-full flex-1 flex-col items-center justify-center">
+						<nav className=" sticky left-0 top-0 z-10 flex w-full items-center justify-between px-6 py-4 shadow-md backdrop-blur-md">
+							<ThemeToggle />
+							<ul className="flex items-center justify-center gap-4 text-primary-dark-500 dark:text-primary-light-500">
+								<Button
+									size={"sm"}
+									className=" flex items-center justify-center gap-2 font-semibold"
+									onClick={() =>
+										session ? signOut() : signIn("google")
+									}
+								>
+									{!session ? (
+										<>
+											<FaGoogle />
+											<div>SIGN IN WITH GOOGLE</div>
+										</>
+									) : (
+										<div>SIGN OUT</div>
+									)}
+								</Button>
+								{session?.user?.image && (
+									<AvatarHovered
+										user={session.user}
+										imgURL={session.user.image}
+									/>
 								)}
-							</Button>
-							{session?.user?.image && (
-								<AvatarHovered
-									user={session.user}
-									imgURL={session.user.image}
-								/>
+							</ul>
+						</nav>
+						<main
+							className={twMerge(
+								"relative mx-auto flex w-full  flex-col bg-gradient-to-r px-6 py-4 " +
+									poppins.className
 							)}
-						</ul>
-					</nav>
-					<main
-						className={twMerge(
-							"relative mx-auto flex w-full  flex-col bg-gradient-to-r px-6 py-4 " +
-								poppins.className
-						)}
-					>
-						{children}
-					</main>
-				</div>
+						>
+							{children}
+						</main>
+					</div>
+				</AnimatePresence>
 			</div>
 		</>
 	);

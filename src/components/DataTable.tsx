@@ -116,6 +116,7 @@ export default function DataTable({ data }: { data: Student[] }) {
 						color: "primary.main",
 					},
 				}}
+				isCellEditable={() => false}
 				isRowSelectable={() => false}
 				rows={data}
 				columns={columns}
