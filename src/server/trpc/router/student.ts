@@ -101,6 +101,14 @@ export const studentRouter = router({
 				where: {
 					teacherId: ctx.session.user.id,
 				},
+				include: {
+					batch: {
+						orderBy: {
+							startDate: "desc",
+						},
+						take: 1,
+					},
+				},
 			});
 			return {
 				students,

@@ -44,6 +44,32 @@ export const batchRouter = router({
 				});
 			}
 		}),
+	// latestById: protectedProcedure
+	// 	.input(
+	// 		z.object({
+	// 			id: z.string(),
+	// 		})
+	// 	)
+	// 	.query(async ({ input, ctx }) => {
+	// 		const { prisma } = ctx;
+	// 		const { id } = input;
+	// 		try {
+	// 			const batch = await prisma.batch.findFirst({
+	// 				where: {
+	// 					studentId: id,
+	// 				},
+	// 				orderBy: {
+	// 					startDate: "desc",
+	// 				},
+	// 			});
+	// 			return batch;
+	// 		} catch (err: any) {
+	// 			throw new TRPCError({
+	// 				code: "INTERNAL_SERVER_ERROR",
+	// 				message: err?.message,
+	// 			});
+	// 		}
+	// 	}),
 	getBatchesForStudent: protectedProcedure
 		.input(z.object({ studentId: z.string() }))
 		.query(async ({ input, ctx }) => {

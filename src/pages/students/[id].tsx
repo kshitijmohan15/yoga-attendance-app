@@ -58,10 +58,9 @@ export async function getServerSideProps(context: any) {
 
 const StudentDetails: FC = () => {
 	const router = useRouter();
-	const { id } = router.query;
 	const { data: student, isLoading: studentIsLoading } =
 		trpc.student.getStudent.useQuery({
-			id: id as string,
+			id: router.query.id as string,
 		});
 
 	const {
@@ -97,11 +96,11 @@ const StudentDetails: FC = () => {
 	});
 	const { data: batches, isLoading: batchesAreLoading } =
 		trpc.batch.getBatchesForStudent.useQuery({
-			studentId: id as string,
+			studentId: router.query.id as string,
 		});
 	const utils = trpc.useContext();
 	const onSubmit = (data: CreateBatchType) => {
-		createBatch({ ...data, studentId: id as string });
+		createBatch({ ...data, studentId: router.query.id as string });
 	};
 
 	// to be edited will be passed to the
