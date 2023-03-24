@@ -7,7 +7,7 @@ export const studentRouter = router({
 		.input(
 			z.object({
 				name: z.string(),
-				email: z.string(),
+				email: z.string().optional(),
 				phone: z.string(),
 				teacherId: z.string(),
 			})
@@ -40,7 +40,7 @@ export const studentRouter = router({
 			z.object({
 				id: z.string(),
 				name: z.string(),
-				email: z.string(),
+				email: z.string().optional(),
 				phone: z.string(),
 			})
 		)

@@ -11,6 +11,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Sidebar from "./Sidebar";
 import { AnimatePresence } from "framer-motion";
 import Link from "next/link";
+
 type Props = {
 	children: React.ReactNode;
 	title?: string;

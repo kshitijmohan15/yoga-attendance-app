@@ -58,7 +58,7 @@ model VerificationToken {
 model Student {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
-  email     String   @unique
+  email     String?   @unique
   phone     String
   batch     Batch[]
   teacher   User?    @relation(fields: [teacherId], references: [id])

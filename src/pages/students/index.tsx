@@ -47,6 +47,7 @@ const CreateStudent = () => {
 		handleSubmit,
 		formState: { errors },
 		reset,
+		watch,
 	} = useForm<CreateStudentType>({
 		resolver: zodResolver(createStudentSchema),
 	});
@@ -54,10 +55,11 @@ const CreateStudent = () => {
 	const { data: session } = useSession();
 	const onSubmit: SubmitHandler<CreateStudentType> = (data) => {
 		try {
-			mutateStudent({
+			const newData = {
 				...data,
 				teacherId: session?.user?.id as string,
-			});
+			};
+			mutateStudent(newData);
 		} catch (e) {
 			console.log(e);
 			throw Error("Error creating student");
@@ -133,7 +135,10 @@ const CreateStudent = () => {
 							"dark:text-bule-800 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-100 dark:bg-blue-200 dark:hover:bg-blue-300 dark:hover:text-blue-800 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800",
 							" cursor-pointer bg-blue-300 py-2 px-3 font-semibold text-blue-800 hover:bg-blue-400"
 						)}
-						onClick={() => setModalOpen(true)}
+						onClick={() => {
+							reset({});
+							setModalOpen(true);
+						}}
 					>
 						Add a student
 					</div>
@@ -152,6 +157,15 @@ const CreateStudent = () => {
 								<div className=" overflow-auto">
 									{students ? (
 										<DataTable
+											reset={reset}
+											setToBeEdited={setToBeEdited}
+											setToBeDeleted={setToBeDeleted}
+											setUpdateModalOpen={
+												setUpdateModalOpen
+											}
+											setDeleteModalOpen={
+												setDeleteModalOpen
+											}
 											data={students?.filter((i) =>
 												i.name
 													.toLowerCase()
@@ -182,9 +196,10 @@ const CreateStudent = () => {
 								<div className="grid grid-cols-2 gap-4">
 									<label className="block ">
 										<span className="text-md font-medium text-gray-500 dark:text-gray-200">
-											Name
+											Name {watch().name}
 										</span>
 										<Input
+											defaultValue={watch().name}
 											{...register("name")}
 											className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm"
 										/>
@@ -237,7 +252,7 @@ const CreateStudent = () => {
 					</DialogContent>
 				</Dialog>
 				<Dialog open={modalOpen}>
-					<DialogTrigger onClick={() => reset({})}></DialogTrigger>
+					{/* <DialogTrigger onClick={() => reset({})}></DialogTrigger> */}
 					<DialogContent
 						setOpen={setModalOpen}
 						className="flex items-center justify-center"
