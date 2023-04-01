@@ -8,6 +8,7 @@ import { DATE_FORMAT_ZOOM } from "@/utils/constants";
 import { trpc } from "@/utils/trpc";
 import Layout from "@/components/Layout";
 import { BsTrashFill } from "react-icons/bs";
+import { AiTwotonePlusSquare } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { Button } from "@/components/Button";
 
@@ -173,6 +174,18 @@ function UploadCsv() {
 						Upload
 					</Button>
 				</div>
+				{participantsLoaded && (
+					<div className="flex gap-3">
+						<div className="flex items-center gap-2">
+							<AiTwotonePlusSquare color="green" />
+							<p>Student already in database</p>
+						</div>
+						<div className="flex items-center gap-2">
+							<AiTwotonePlusSquare color="#E1341E" />
+							<p>Student not in database</p>
+						</div>
+					</div>
+				)}
 				<table className="w-1/2">
 					{participants.map((item: any, index: number) => (
 						<tr
