@@ -68,15 +68,15 @@ function UploadCsv() {
 											joinTime: roundToNearestHalfHour(
 												dayjs(
 													item["Join Time"],
-													"MM/DD/YYYY hh:mm:ss A"
+													DATE_FORMAT_ZOOM
 												)
 											).format("h:mm A"),
 											joinDate: dayjs(
-												"03-01-2023  07:01:15",
+												item["Join Time"],
 												DATE_FORMAT_ZOOM
 											).format("DD/MM/YYYY"),
 											date: dayjs(
-												"03-01-2023  07:01:15",
+												item["Join Time"],
 												DATE_FORMAT_ZOOM
 											).toDate(),
 										};
