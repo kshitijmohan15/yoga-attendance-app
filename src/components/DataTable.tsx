@@ -163,15 +163,6 @@ export default function DataTable({
 		<div style={{ height: 600, width: "100%" }}>
 			<DataGrid
 				className="dark:text-gray-200"
-				sx={{
-					boxShadow: 2,
-					"& .MuiToolbar-root": {
-						color: "primary.main",
-					},
-					"& MuiDataGrid-iconButtonContainer": {
-						color: "primary.main",
-					},
-				}}
 				isCellEditable={() => false}
 				isRowSelectable={() => false}
 				rows={data}

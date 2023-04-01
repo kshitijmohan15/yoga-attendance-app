@@ -8,7 +8,7 @@ export const studentRouter = router({
 			z.object({
 				name: z.string(),
 				email: z.string().optional(),
-				phone: z.string(),
+				phone: z.string().optional(),
 				teacherId: z.string(),
 			})
 		)
@@ -41,7 +41,7 @@ export const studentRouter = router({
 				id: z.string(),
 				name: z.string(),
 				email: z.string().optional(),
-				phone: z.string(),
+				phone: z.string().optional(),
 			})
 		)
 		.mutation(async ({ ctx, input }) => {
@@ -121,6 +121,42 @@ export const studentRouter = router({
 			});
 		}
 	}),
+	getStudentsAlreadyInDb: protectedProcedure
+		.input(
+			z.object({
+				names: z.array(z.string()),
+			})
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { prisma } = ctx;
+			try {
+				const students = await prisma.student.findMany({
+					where: {
+						name: {
+							in: input.names,
+						},
+						teacherId: ctx.session.user.id,
+					},
+					include: {
+						batch: {
+							orderBy: {
+								startDate: "desc",
+							},
+							take: 1,
+						},
+					},
+				});
+				return {
+					students,
+				};
+			} catch (error: any) {
+				// handle error
+				throw new TRPCError({
+					message: error,
+					code: "INTERNAL_SERVER_ERROR",
+				});
+			}
+		}),
 	getStudent: protectedProcedure
 		.input(
 			z.object({

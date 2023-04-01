@@ -5,10 +5,12 @@ import { trpc } from "../../utils/trpc";
 import { Button } from "../../components/Button";
 import DatePicker from "react-datepicker";
 import { AiOutlineCheck } from "react-icons/ai";
-
+import { Calendar, dayjsLocalizer } from "react-big-calendar";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import { RxTrash, RxPencil1 } from "react-icons/rx";
 import "react-datepicker/dist/react-datepicker.css";
 import { Inter } from "@next/font/google";
+
 import {
 	Dialog,
 	DialogContent,
@@ -30,7 +32,7 @@ import { getSession } from "next-auth/react";
 import DeleteModal from "../../components/DeleteStudentModal";
 import { ListSkeletonBatches } from "../../components/ListSkeleton";
 import { QueryClient } from "@tanstack/react-query";
-
+const localizer = dayjsLocalizer(dayjs);
 const inter = Inter({
 	weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
@@ -62,7 +64,11 @@ const StudentDetails: FC = () => {
 		trpc.student.getStudent.useQuery({
 			id: router.query.id as string,
 		});
-
+	const { data: attendances } =
+		trpc.attendance.getAttendaceByStudent.useQuery({
+			studentId: router.query.id as string,
+		});
+	console.log("ATTENDANCES", attendances);
 	const {
 		mutateAsync: createBatch,
 		isLoading: creatingBatch,
@@ -127,7 +133,7 @@ const StudentDetails: FC = () => {
 	} = useForm<CreateBatchType>({
 		resolver: zodResolver(batchSchema),
 	});
-
+	const [tab, setTab] = useState<number>(0);
 	const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);
 	const [updateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
 	const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
@@ -137,7 +143,7 @@ const StudentDetails: FC = () => {
 				{!studentIsLoading && student ? (
 					<div>
 						<h1 className="text-4xl">{student?.name}</h1>
-						<div className="flex gap-2">
+						{/* <div className="flex gap-2">
 							<p className="font-semibold text-gray-600">
 								{student?.email}
 							</p>
@@ -145,7 +151,7 @@ const StudentDetails: FC = () => {
 							<p className="font-semibold text-gray-600">
 								{student?.phone}
 							</p>
-						</div>
+						</div> */}
 					</div>
 				) : (
 					""
@@ -346,72 +352,96 @@ const StudentDetails: FC = () => {
 						Go back
 					</Button>
 				</div>
-				<div className="flex h-96 w-full flex-col gap-4 overflow-auto">
-					{batchesAreLoading ? <ListSkeletonBatches /> : null}
-					{batches?.map((batch) => {
-						return (
-							<ListItem
-								key={batch.id}
-								intent={
-									batch.isPaused
-										? "paused"
-										: batch.paid
-										? "paid"
-										: "unpaid"
-								}
-								classNames="items-center"
-							>
-								<div className="flex flex-col items-baseline gap-2 sm:flex-row ">
-									<div className="text-sm font-semibold md:text-lg lg:text-xl">
-										{formatAsDate(batch.startDate)}
-									</div>
-									<div className="">to</div>
-									<div className="text-sm font-semibold md:text-lg lg:text-xl">
-										{formatAsDate(batch.endDate)}
-									</div>
-								</div>
-								<div className="flex h-full flex-1 items-center justify-end gap-3">
-									<p className="text-md font-bold md:text-lg lg:text-2xl">
-										{rupee} {batch.amount}
-									</p>
-									<div className="flex gap-1">
-										<div
-											onClick={() => {
-												setToBeEdited(batch.id);
-												reset({
-													startDate: batch.startDate,
-													endDate: batch.endDate,
-													amount: batch.amount,
-													paid: batch.paid,
-													isPaused: batch.isPaused,
-												});
-												setUpdateModalOpen(true);
-											}}
-											className="flex items-center"
-										>
-											<RxPencil1
-												size={30}
-												className="rounded-md p-1 shadow-md"
-											/>
-										</div>
-										<div
-											onClick={() => {
-												setToBeDeleted(batch.id);
-												setDeleteModalOpen(true);
-											}}
-											className="flex items-center"
-										>
-											<RxTrash
-												size={30}
-												className="rounded-md p-1 shadow-md"
-											/>
-										</div>
-									</div>
-								</div>
-							</ListItem>
-						);
-					})}
+				<div className="flex w-full gap-4">
+					<Button onClick={() => setTab(0)}>Batches</Button>
+					<Button onClick={() => setTab(1)}>Calendar</Button>
 				</div>
+				{tab === 0 && (
+					<div className="flex h-96 w-full flex-col gap-4 overflow-auto">
+						{batchesAreLoading ? <ListSkeletonBatches /> : null}
+						{batches?.map((batch) => {
+							return (
+								<ListItem
+									key={batch.id}
+									intent={
+										batch.isPaused
+											? "paused"
+											: batch.paid
+											? "paid"
+											: "unpaid"
+									}
+									classNames="items-center"
+								>
+									<div className="flex flex-col items-baseline gap-2 sm:flex-row ">
+										<div className="text-sm font-semibold md:text-lg lg:text-xl">
+											{formatAsDate(batch.startDate)}
+										</div>
+										<div className="">to</div>
+										<div className="text-sm font-semibold md:text-lg lg:text-xl">
+											{formatAsDate(batch.endDate)}
+										</div>
+									</div>
+									<div className="flex h-full flex-1 items-center justify-end gap-3">
+										<p className="text-md font-bold md:text-lg lg:text-2xl">
+											{rupee} {batch.amount}
+										</p>
+										<div className="flex gap-1">
+											<div
+												onClick={() => {
+													setToBeEdited(batch.id);
+													reset({
+														startDate:
+															batch.startDate,
+														endDate: batch.endDate,
+														amount: batch.amount,
+														paid: batch.paid,
+														isPaused:
+															batch.isPaused,
+													});
+													setUpdateModalOpen(true);
+												}}
+												className="flex items-center"
+											>
+												<RxPencil1
+													size={30}
+													className="rounded-md p-1 shadow-md"
+												/>
+											</div>
+											<div
+												onClick={() => {
+													setToBeDeleted(batch.id);
+													setDeleteModalOpen(true);
+												}}
+												className="flex items-center"
+											>
+												<RxTrash
+													size={30}
+													className="rounded-md p-1 shadow-md"
+												/>
+											</div>
+										</div>
+									</div>
+								</ListItem>
+							);
+						})}
+					</div>
+				)}
+				{tab === 1 && (
+					<div className="flex h-96 w-full flex-col gap-4 overflow-auto">
+						<Calendar
+							startAccessor="start"
+							style={{ height: 500 }}
+							localizer={localizer}
+							events={attendances?.attendance.map(
+								(attendance) => ({
+									title: "Present",
+									start: attendance.date,
+									end: attendance.date,
+								})
+							)}
+						/>
+					</div>
+				)}
 				<Dialog open={updateModalOpen}>
 					<DialogContent setOpen={setUpdateModalOpen}>
 						<DialogHeader>

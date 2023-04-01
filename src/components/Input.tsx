@@ -1,7 +1,30 @@
 import * as React from "react";
-
+import { Listbox } from "@headlessui/react";
 import { cn } from "../lib";
-
+const ListInput = <T,>({
+	input,
+	setInput,
+	options,
+}: {
+	input: T;
+	setInput: React.Dispatch<React.SetStateAction<T>>;
+	options: T[];
+}) => (
+	<Listbox value={input} onChange={setInput}>
+		{/* <Listbox.Button>{selectedPerson.name}</Listbox.Button> */}
+		<Listbox.Options>
+			{options.map((person: any, index: number) => (
+				<Listbox.Option
+					key={index}
+					value={person}
+					disabled={person.unavailable}
+				>
+					{String(person)}
+				</Listbox.Option>
+			))}
+		</Listbox.Options>
+	</Listbox>
+);
 const Input = React.forwardRef<
 	HTMLInputElement,
 	React.InputHTMLAttributes<HTMLInputElement>
@@ -19,4 +42,4 @@ const Input = React.forwardRef<
 });
 Input.displayName = "Input";
 
-export { Input };
+export { Input, ListInput };

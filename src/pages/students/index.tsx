@@ -51,8 +51,10 @@ const CreateStudent = () => {
 	} = useForm<CreateStudentType>({
 		resolver: zodResolver(createStudentSchema),
 	});
+
 	const utils = trpc.useContext();
 	const { data: session } = useSession();
+	// const { accessToken } = session;
 	const onSubmit: SubmitHandler<CreateStudentType> = (data) => {
 		try {
 			const newData = {
@@ -79,12 +81,6 @@ const CreateStudent = () => {
 			reset();
 			setModalOpen(false);
 		},
-	});
-	useEffect(() => {
-		console.log("mount");
-		return () => {
-			console.log("unmount");
-		};
 	});
 
 	const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -142,7 +138,6 @@ const CreateStudent = () => {
 					>
 						Add a student
 					</div>
-
 					<Input
 						onChange={(e) => debouncedHandleSearch(e)}
 						placeholder="Search"

@@ -56,15 +56,16 @@ model VerificationToken {
 }
 
 model Student {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  email     String?   @unique
-  phone     String
-  batch     Batch[]
-  teacher   User?    @relation(fields: [teacherId], references: [id])
-  teacherId String   @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  email      String?
+  phone      String?
+  batch      Batch[]
+  attendance Attendance[]
+  teacher    User?        @relation(fields: [teacherId], references: [id])
+  teacherId  String       @db.ObjectId
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 }
 
 model Batch {
@@ -78,6 +79,17 @@ model Batch {
   isPaused  Boolean?
   startDate DateTime
   endDate   DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Attendance {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  joinDate  String
+  joinTime  String
+  date      DateTime
+  student   Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String?  @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
