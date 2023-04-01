@@ -6,6 +6,11 @@ import { Input, ListInput } from "@/components/Input";
 import { Listbox } from "@headlessui/react";
 import { DATE_FORMAT_ZOOM } from "@/utils/constants";
 import { trpc } from "@/utils/trpc";
+import Layout from "@/components/Layout";
+import { BsTrashFill } from "react-icons/bs";
+import { toast } from "react-toastify";
+import { Button } from "@/components/Button";
+
 function capitalize(string: string) {
 	return string?.charAt(0).toUpperCase() + string?.slice(1) ?? "";
 }
@@ -21,7 +26,11 @@ function UploadCsv() {
 	const [participantsLoaded, setParticipantsLoaded] = useState(false);
 	const { mutateAsync: getStudentsInDb, data: studentsInDb } =
 		trpc.student.getStudentsAlreadyInDb.useMutation();
-	const { mutateAsync: uploadCsv } = trpc.attendance.uploadCsv.useMutation();
+	const { mutateAsync: uploadCsv } = trpc.attendance.uploadCsv.useMutation({
+		onSuccess: () => {
+			toast.success("Attendance uploaded successfully");
+		},
+	});
 	const handleFileChange = (event: any) => {
 		setFile(event.target.files[0]);
 	};
@@ -32,8 +41,7 @@ function UploadCsv() {
 			});
 		}
 	}, [participantsLoaded]);
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
+	const handleSubmit = () => {
 		if (file) {
 			const fileUrl = URL.createObjectURL(file);
 
@@ -93,7 +101,7 @@ function UploadCsv() {
 							)
 						);
 						setParticipantsLoaded(true);
-						// console.log("DATA", data);
+						console.log("HANDLE SUBMIT", data);
 					}
 				});
 		} else {
@@ -143,76 +151,87 @@ function UploadCsv() {
 		);
 		return uniqueParticipants;
 	}
+
 	return (
-		<form className="text-white" onSubmit={handleSubmit}>
-			<label>
-				Upload a CSV file:
+		<Layout>
+			<div className="flex flex-col gap-4 text-black">
+				<label className="text-xl font-medium">
+					Upload a CSV file:
+				</label>
 				<input type="file" onChange={handleFileChange} />
-			</label>
-			{/* {JSON.stringify(participants)} */}
-			<table className="m-4 w-1/2">
-				{participants.map((item: any, index: number) => (
-					<tr
-						key={index}
-						className="flex w-full justify-between gap-10"
+				{/* {JSON.stringify(participants)} */}
+				<div className="flex gap-4">
+					<Button className="w-20" onClick={() => handleSubmit()}>
+						Preview
+					</Button>
+					<Button
+						className="w-20"
+						onClick={() =>
+							uploadCsv({ participants: participants })
+						}
 					>
-						<td
-							className={`w-52 ${
-								studentsInDb &&
-								(studentsInDb.students.some(
-									(student) => student.name === item.name
-								)
-									? "bg-green-500"
-									: "bg-red-500")
-							}`}
+						Upload
+					</Button>
+				</div>
+				<table className="w-1/2">
+					{participants.map((item: any, index: number) => (
+						<tr
+							key={index}
+							className="flex w-full justify-between gap-10"
 						>
-							{item.name}
-						</td>
-						<td>
-							<Listbox>
-								<Listbox.Button>{item.joinTime}</Listbox.Button>
-								<Listbox.Options className="absolute bg-slate-600">
-									{generateHourList().map((hour) => (
-										<Listbox.Option
-											onClick={() =>
-												updateParticipants(
-													item.name,
-													hour
-												)
-											}
-											key={hour}
-											value={hour}
-										>
-											{hour}
-										</Listbox.Option>
-									))}
-								</Listbox.Options>
-							</Listbox>
-						</td>
-						<td>{item.joinDate}</td>
-						<td
-							onClick={() =>
-								setParticipants((past) =>
-									past.filter(
-										(i, pastIndex) => pastIndex !== index
+							<td
+								className={`w-52 ${
+									studentsInDb &&
+									(studentsInDb.students.some(
+										(student) => student.name === item.name
 									)
-								)
-							}
-						>
-							Delete
-						</td>
-					</tr>
-				))}
-			</table>
-			<div className="flex flex-col gap-4">
-				<button type="submit">Submit</button>
-				<button
-					onClick={() => uploadCsv({ participants: participants })}
-				>
-					Upload
-				</button>
+										? "bg-green-500"
+										: "bg-red-500")
+								}`}
+							>
+								{item.name}
+							</td>
+							<td>
+								<Listbox>
+									<Listbox.Button>
+										{item.joinTime}
+									</Listbox.Button>
+									<Listbox.Options className="absolute bg-slate-600">
+										{generateHourList().map((hour) => (
+											<Listbox.Option
+												onClick={() =>
+													updateParticipants(
+														item.name,
+														hour
+													)
+												}
+												key={hour}
+												value={hour}
+											>
+												{hour}
+											</Listbox.Option>
+										))}
+									</Listbox.Options>
+								</Listbox>
+							</td>
+							<td>{item.joinDate}</td>
+							<td
+								onClick={() =>
+									setParticipants((past) =>
+										past.filter(
+											(i, pastIndex) =>
+												pastIndex !== index
+										)
+									)
+								}
+							>
+								<BsTrashFill />
+							</td>
+						</tr>
+					))}
+				</table>
 			</div>
-		</form>
+		</Layout>
 	);
 }
 export default UploadCsv;

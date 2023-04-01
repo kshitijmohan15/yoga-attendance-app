@@ -35,7 +35,7 @@ const Layout: FC<Props> = ({ children, title }) => {
 					<Sidebar setShowSidebar={setShowSidebar} />
 				) : null}
 				<div className=" flex h-full flex-1 flex-col items-center justify-center">
-					<nav className=" sticky left-0 top-0 z-10 flex w-full items-center justify-between px-6 py-4 shadow-md backdrop-blur-md">
+					<nav className=" sticky left-0 top-0 z-10 flex w-full items-center justify-between px-6 py-4 backdrop-blur-md">
 						<ThemeToggle />
 						<ul>
 							<Link

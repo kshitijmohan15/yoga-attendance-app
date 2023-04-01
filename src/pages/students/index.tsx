@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 import DeleteModal from "../../components/DeleteStudentModal";
 import DataTable from "../../components/DataTable";
 import { ListSkeleton } from "../../components/ListSkeleton";
+import { useRouter } from "next/router";
 
 type CreateStudentType = z.infer<typeof createStudentSchema>;
 export async function getServerSideProps(context: any) {
@@ -121,22 +122,36 @@ const CreateStudent = () => {
 	const handleSearch = (e: any) => {
 		setSearchTerm(e.target.value);
 	};
+	const router = useRouter();
 	const debouncedHandleSearch = useCallback(debounce(handleSearch, 300), []);
 	return (
 		<Layout title="Create Student">
 			<section className="flex flex-col justify-start">
 				<div className="flex h-auto w-full items-center justify-between border-b-2 border-primary-light-600 pb-4 dark:border-primary-dark-600">
-					<div
-						className={twMerge(
-							"dark:text-bule-800 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-100 dark:bg-blue-200 dark:hover:bg-blue-300 dark:hover:text-blue-800 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800",
-							" cursor-pointer bg-blue-300 py-2 px-3 font-semibold text-blue-800 hover:bg-blue-400"
-						)}
-						onClick={() => {
-							reset({});
-							setModalOpen(true);
-						}}
-					>
-						Add a student
+					<div className="flex gap-2">
+						<div
+							className={twMerge(
+								"dark:text-bule-800 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-100 dark:bg-blue-200 dark:hover:bg-blue-300 dark:hover:text-blue-800 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800",
+								" cursor-pointer bg-blue-300 py-2 px-3 font-semibold text-blue-800 hover:bg-blue-400"
+							)}
+							onClick={() => {
+								reset({});
+								setModalOpen(true);
+							}}
+						>
+							Add a student
+						</div>
+						<div
+							className={twMerge(
+								"dark:text-bule-800 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-100 dark:bg-blue-200 dark:hover:bg-blue-300 dark:hover:text-blue-800 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800",
+								" cursor-pointer bg-blue-300 py-2 px-3 font-semibold text-blue-800 hover:bg-blue-400"
+							)}
+							onClick={() => {
+								router.push("/csv");
+							}}
+						>
+							Upload new attendance
+						</div>
 					</div>
 					<Input
 						onChange={(e) => debouncedHandleSearch(e)}
