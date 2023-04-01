@@ -2,7 +2,6 @@ import { useSession } from "next-auth/react";
 
 export default function IndexPage() {
 	const { data } = useSession();
-	const { accessToken } = data;
 	return (
 		<div>
 			<h1>Index Page</h1>
