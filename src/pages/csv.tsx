@@ -162,10 +162,15 @@ function UploadCsv() {
 				<input type="file" onChange={handleFileChange} />
 				{/* {JSON.stringify(participants)} */}
 				<div className="flex gap-4">
-					<Button className="w-20" onClick={() => handleSubmit()}>
+					<Button
+						disabled={typeof file === "undefined"}
+						className="w-20"
+						onClick={() => handleSubmit()}
+					>
 						Preview
 					</Button>
 					<Button
+						disabled={!participantsLoaded}
 						className="w-20"
 						onClick={() =>
 							uploadCsv({ participants: participants })
