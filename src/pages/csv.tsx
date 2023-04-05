@@ -194,6 +194,11 @@ function UploadCsv() {
 						>
 							<td
 								className={`w-52 ${
+									index === 0 ? "rounded-t-md" : ""
+								} ${
+									index === participants.length - 1 &&
+									"rounded-b-md"
+								} p-2 ${
 									studentsInDb &&
 									(studentsInDb.students.some(
 										(student) => student.name === item.name
