@@ -40,7 +40,7 @@ const Layout: FC<Props> = ({ children, title }) => {
 						<ul>
 							<Link
 								href="/students"
-								className="flex items-center gap-2 px-2 py-1 shadow-md"
+								className="flex items-center gap-2 rounded-md px-2 py-1 shadow-sm md:hidden"
 							>
 								<FaUsers />
 								Students

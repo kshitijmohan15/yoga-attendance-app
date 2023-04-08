@@ -359,6 +359,11 @@ const StudentDetails: FC = () => {
 				{tab === 0 && (
 					<div className="flex h-96 w-full flex-col gap-4 overflow-auto">
 						{batchesAreLoading ? <ListSkeletonBatches /> : null}
+						{batches && batches.length === 0 && (
+							<ListItem intent={"default"}>
+								<div>Add a new batch!</div>
+							</ListItem>
+						)}
 						{batches?.map((batch) => {
 							return (
 								<ListItem
@@ -570,8 +575,6 @@ const StudentDetails: FC = () => {
 										)}
 									</label>
 								</div>
-								<pre>{JSON.stringify(watch(), null, 2)}</pre>
-
 								<div className="mt-4 block">
 									<Button
 										className=" bg-green-300 py-2 px-3 font-semibold text-green-800 hover:bg-green-400"

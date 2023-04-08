@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import csv from "csv-parser";
 import dayjs from "dayjs";
 import { type Dayjs } from "dayjs";
@@ -30,9 +30,13 @@ function UploadCsv() {
 	const { mutateAsync: uploadCsv } = trpc.attendance.uploadCsv.useMutation({
 		onSuccess: () => {
 			toast.success("Attendance uploaded successfully");
+			setFile(undefined);
+			setParticipants([]);
+			setParticipantsLoaded(false);
 		},
 	});
 	const handleFileChange = (event: any) => {
+		console.log("file", event.target.files[0]);
 		setFile(event.target.files[0]);
 	};
 	useEffect(() => {
@@ -42,7 +46,7 @@ function UploadCsv() {
 			});
 		}
 	}, [participantsLoaded]);
-	const handleSubmit = () => {
+	const handleSubmit = useCallback(() => {
 		if (file) {
 			const fileUrl = URL.createObjectURL(file);
 
@@ -108,7 +112,7 @@ function UploadCsv() {
 		} else {
 			console.error("Please select a file");
 		}
-	};
+	}, [file]);
 	function roundToNearestHalfHour(date: Dayjs) {
 		return date.minute(Math.round(date.minute() / 30) * 30).second(0);
 	}
@@ -154,7 +158,7 @@ function UploadCsv() {
 	}
 
 	return (
-		<Layout>
+		<Layout title="Upload Zoom Attendance">
 			<div className="flex flex-col gap-4 text-black">
 				<label className="text-xl font-medium">
 					Upload a CSV file:
@@ -172,20 +176,20 @@ function UploadCsv() {
 					<Button
 						disabled={!participantsLoaded}
 						className="w-20"
-						onClick={() =>
-							uploadCsv({ participants: participants })
-						}
+						onClick={() => {
+							uploadCsv({ participants: participants });
+						}}
 					>
 						Upload
 					</Button>
 				</div>
 				{participantsLoaded && (
 					<div className="flex gap-3">
-						<div className="flex items-center gap-2">
+						<div className="flex items-center gap-2 bg-green-200 p-1 text-green-700">
 							<AiTwotonePlusSquare color="green" />
 							<p>Student already in database</p>
 						</div>
-						<div className="flex items-center gap-2">
+						<div className="flex items-center gap-2 rounded-md bg-red-200 p-1 text-red-700">
 							<AiTwotonePlusSquare color="#E1341E" />
 							<p>Student not in database</p>
 						</div>
@@ -202,14 +206,14 @@ function UploadCsv() {
 									index === 0 ? "rounded-t-md" : ""
 								} ${
 									index === participants.length - 1 &&
-									"rounded-b-md"
-								} p-2 ${
+									"rounded-b-md "
+								} p-2 font-semibold ${
 									studentsInDb &&
 									(studentsInDb.students.some(
 										(student) => student.name === item.name
 									)
-										? "bg-green-500"
-										: "bg-red-500")
+										? "bg-green-200 text-green-700"
+										: "bg-red-200 text-red-700")
 								}`}
 							>
 								{item.name}

@@ -79,12 +79,18 @@ export default function DataTable({
 
 			renderCell(params) {
 				return (
-					<Link
-						className="font-medium hover:text-blue-700"
-						href={`/students/${params.id}`}
+					<div
+						className={
+							"flex h-full w-full items-center justify-start"
+						}
 					>
-						{params.value}
-					</Link>
+						<Link
+							className="flex h-full flex-1 items-center font-medium hover:text-blue-700"
+							href={`/students/${params.id}`}
+						>
+							{params.value}
+						</Link>
+					</div>
 				);
 			},
 		},

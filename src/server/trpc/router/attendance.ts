@@ -17,6 +17,9 @@ export const attendanceRouter = router({
 			})
 		)
 		.mutation(async ({ ctx, input }) => {
+			// Create a new participant when the name does not exist in the database
+			// and create attendance records for all participants
+
 			try {
 				const { prisma } = ctx;
 				const { participants } = input;
