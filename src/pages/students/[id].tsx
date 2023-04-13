@@ -65,7 +65,7 @@ const StudentDetails: FC = () => {
 			id: router.query.id as string,
 		});
 	const { data: attendances } =
-		trpc.attendance.getAttendaceByStudent.useQuery({
+		trpc.attendance.getAttendanceByStudent.useQuery({
 			studentId: router.query.id as string,
 		});
 	console.log("ATTENDANCES", attendances);
@@ -434,14 +434,27 @@ const StudentDetails: FC = () => {
 				{tab === 1 && (
 					<div className="flex h-96 w-full flex-col gap-4 overflow-auto">
 						<Calendar
+							onSelectSlot={(data) => {
+								console.log(data);
+							}}
+							selectable={true}
+							messages={{
+								next: "Next Month",
+								previous: "Previous Month",
+								today: "Today",
+								month: "Month",
+								week: "Week",
+								day: "Day",
+								showMore: (total) => `+${total} more`,
+							}}
 							startAccessor="start"
 							style={{ height: 500 }}
 							localizer={localizer}
 							events={attendances?.attendance.map(
 								(attendance) => ({
 									title: "Present",
-									start: attendance.date,
-									end: attendance.date,
+									start: attendance.startDate,
+									end: attendance.endDate,
 								})
 							)}
 						/>

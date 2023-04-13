@@ -17,9 +17,8 @@ function capitalize(string: string) {
 }
 interface Participant {
 	name: string;
-	joinTime: string;
-	joinDate: string;
-	date: Date;
+	startDate: Date;
+	endDate: Date;
 }
 function UploadCsv() {
 	const [file, setFile] = useState();
@@ -88,6 +87,14 @@ function UploadCsv() {
 												item["Join Time"],
 												DATE_FORMAT_ZOOM
 											).format("DD/MM/YYYY"),
+											startDate: dayjs(
+												item["Join Time"],
+												DATE_FORMAT_ZOOM
+											).toDate(),
+											endDate: dayjs(
+												item["Leave Time"],
+												DATE_FORMAT_ZOOM
+											).toDate(),
 											date: dayjs(
 												item["Join Time"],
 												DATE_FORMAT_ZOOM
@@ -177,7 +184,15 @@ function UploadCsv() {
 						disabled={!participantsLoaded}
 						className="w-20"
 						onClick={() => {
-							uploadCsv({ participants: participants });
+							uploadCsv({
+								participants: participants.map(
+									(participant) => ({
+										name: participant.name,
+										startDate: participant.startDate,
+										endDate: participant.endDate,
+									})
+								),
+							});
 						}}
 					>
 						Upload

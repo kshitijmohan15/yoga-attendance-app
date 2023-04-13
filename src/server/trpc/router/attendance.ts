@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { protectedProcedure, router } from "../trpc";
+import { protectedProcedure, publicProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
 
 export const attendanceRouter = router({
@@ -9,9 +9,8 @@ export const attendanceRouter = router({
 				participants: z.array(
 					z.object({
 						name: z.string(),
-						joinTime: z.string(),
-						joinDate: z.string(),
-						date: z.date(),
+						startDate: z.date(),
+						endDate: z.date(),
 					})
 				),
 			})
@@ -66,9 +65,8 @@ export const attendanceRouter = router({
 				// create attendance records
 				await prisma.attendance.createMany({
 					data: participants.map((p) => ({
-						joinTime: p.joinTime,
-						joinDate: p.joinDate,
-						date: p.date,
+						startDate: p.startDate,
+						endDate: p.endDate,
 						studentId: allIds.find(
 							(id) =>
 								p.name ===
@@ -84,8 +82,29 @@ export const attendanceRouter = router({
 				});
 			}
 		}),
-
-	getAttendaceByStudent: protectedProcedure
+	// migrateDb: publicProcedure.mutation(async ({ ctx }) => {
+	// 	const prisma = ctx.prisma;
+	// 	try {
+	// 		// change all attendance records and replace the field date with startDate and endDate
+	// 		const attendance = await prisma.attendance.findMany();
+	// 		console.log(attendance[0]);
+	// 		await prisma.attendance.deleteMany();
+	// 		await prisma.attendance.createMany({
+	// 			data: attendance.map((a) => ({
+	// 				startDate: a.date,
+	// 				endDate: a.date,
+	// 				studentId: a.studentId,
+	// 			})),
+	// 		});
+	// 	} catch (error: any) {
+	// 		// handle error
+	// 		throw new TRPCError({
+	// 			message: error,
+	// 			code: "INTERNAL_SERVER_ERROR",
+	// 		});
+	// 	}
+	// }),
+	getAttendanceByStudent: protectedProcedure
 		.input(
 			z.object({
 				studentId: z.string(),
@@ -96,13 +115,9 @@ export const attendanceRouter = router({
 			const { studentId } = input;
 			try {
 				const attendance = await prisma.attendance.findMany({
-					where: {
-						studentId,
-					},
+					where: { studentId: studentId },
 				});
-				return {
-					attendance,
-				};
+				return { attendance };
 			} catch (error: any) {
 				// handle error
 				throw new TRPCError({
