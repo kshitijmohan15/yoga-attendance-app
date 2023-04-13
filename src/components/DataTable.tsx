@@ -12,8 +12,6 @@ import {
 	TooltipTrigger,
 } from "./Tooltip";
 import dayjs from "dayjs";
-import { trpc } from "@/utils/trpc";
-import { useQueryClient } from "@tanstack/react-query";
 
 dayjs.extend(isBetween);
 
@@ -103,7 +101,16 @@ export default function DataTable({
 			renderCell(params) {
 				const latestBatch = params.value[0] as Batch;
 				return (
-					<span className="font-medium">
+					<span className="flex items-center gap-2 font-medium">
+						{params.value?.length > 0 ? (
+							<div
+								className={`h-2 w-2 rounded-full ${
+									latestBatch?.paid
+										? "bg-green-500"
+										: "bg-red-500"
+								}`}
+							></div>
+						) : null}
 						{params.value?.length > 0 ? (
 							dayjs().isBetween(
 								latestBatch.startDate,
