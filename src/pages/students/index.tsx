@@ -23,6 +23,7 @@ import DeleteModal from "../../components/DeleteStudentModal";
 import DataTable from "../../components/DataTable";
 import { ListSkeleton } from "../../components/ListSkeleton";
 import { useRouter } from "next/router";
+import { usePageStore } from "@/store/usePageNo";
 
 type CreateStudentType = z.infer<typeof createStudentSchema>;
 export async function getServerSideProps(context: any) {
@@ -124,6 +125,7 @@ const CreateStudent = () => {
 	};
 	const router = useRouter();
 	const debouncedHandleSearch = useCallback(debounce(handleSearch, 300), []);
+	const pageNo = usePageStore((state) => state.pageNo);
 	return (
 		<Layout title="Create Student">
 			<section className="flex flex-col justify-start">

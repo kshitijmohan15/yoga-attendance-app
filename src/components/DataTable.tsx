@@ -12,6 +12,8 @@ import {
 	TooltipTrigger,
 } from "./Tooltip";
 import dayjs from "dayjs";
+import { useGetFromStore } from "@/hooks/zustandHooks";
+import { usePageStore } from "@/store/usePageNo";
 
 dayjs.extend(isBetween);
 
@@ -69,6 +71,11 @@ export default function DataTable({
 		phone: string;
 	}) => void;
 }) {
+	const [pageNo, setPageNo] = usePageStore((state) => [
+		state.pageNo,
+		state.setPageNo,
+	]);
+
 	const columns: GridColDef[] = [
 		{
 			field: "name",
@@ -175,6 +182,8 @@ export default function DataTable({
 	return (
 		<div style={{ height: 600, width: "100%" }}>
 			<DataGrid
+				page={pageNo}
+				onPageChange={(number) => setPageNo(number)}
 				className="dark:text-gray-200"
 				isCellEditable={() => false}
 				isRowSelectable={() => false}
