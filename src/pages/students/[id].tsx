@@ -92,6 +92,22 @@ const StudentDetails: FC = () => {
 			reset();
 		},
 	});
+	const { mutateAsync: deleteAttendance } =
+		trpc.attendance.deleteAttendance.useMutation({
+			onSuccess: () => {
+				utils.attendance.getAttendanceByStudent.invalidate({
+					studentId: router.query.id as string,
+				});
+			},
+		});
+	const { mutateAsync: createAttendance } =
+		trpc.attendance.createAttendance.useMutation({
+			onSuccess: () => {
+				utils.attendance.getAttendanceByStudent.invalidate({
+					studentId: router.query.id as string,
+				});
+			},
+		});
 
 	const { mutateAsync: deleteBatch } = trpc.batch.deleteBatch.useMutation({
 		onSuccess: () => {
@@ -436,6 +452,18 @@ const StudentDetails: FC = () => {
 						<Calendar
 							onSelectSlot={(data) => {
 								console.log(data);
+								createAttendance({
+									endDate: data.end,
+									startDate: data.start,
+									studentId: router.query.id as string,
+								});
+							}}
+							onSelectEvent={(data) => {
+								deleteAttendance({
+									studentId: router.query.id as string,
+									startDate: data.start as Date,
+									endDate: data.end as Date,
+								});
 							}}
 							selectable={true}
 							messages={{

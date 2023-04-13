@@ -3,6 +3,64 @@ import { protectedProcedure, publicProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
 
 export const attendanceRouter = router({
+	createAttendance: protectedProcedure
+		.input(
+			z.object({
+				studentId: z.string(),
+				startDate: z.date(),
+				endDate: z.date(),
+			})
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { prisma } = ctx;
+			const { studentId, startDate, endDate } = input;
+
+			try {
+				const attendance = await prisma.attendance.create({
+					data: {
+						startDate: startDate,
+						endDate: endDate,
+						studentId: studentId,
+					},
+				});
+				return { attendance };
+			} catch (error: any) {
+				// handle error
+				throw new TRPCError({
+					message: error,
+					code: "INTERNAL_SERVER_ERROR",
+				});
+			}
+		}),
+	deleteAttendance: protectedProcedure
+		.input(
+			z.object({
+				studentId: z.string(),
+				startDate: z.date(),
+				endDate: z.date(),
+			})
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { prisma } = ctx;
+			const { studentId, endDate, startDate } = input;
+
+			try {
+				const attendance = await prisma.attendance.deleteMany({
+					where: {
+						studentId: studentId,
+						startDate: startDate,
+						endDate: endDate,
+					},
+				});
+				return { attendance };
+			} catch (error: any) {
+				// handle error
+				throw new TRPCError({
+					message: error,
+					code: "INTERNAL_SERVER_ERROR",
+				});
+			}
+		}),
 	uploadCsv: protectedProcedure
 		.input(
 			z.object({
@@ -82,28 +140,6 @@ export const attendanceRouter = router({
 				});
 			}
 		}),
-	// migrateDb: publicProcedure.mutation(async ({ ctx }) => {
-	// 	const prisma = ctx.prisma;
-	// 	try {
-	// 		// change all attendance records and replace the field date with startDate and endDate
-	// 		const attendance = await prisma.attendance.findMany();
-	// 		console.log(attendance[0]);
-	// 		await prisma.attendance.deleteMany();
-	// 		await prisma.attendance.createMany({
-	// 			data: attendance.map((a) => ({
-	// 				startDate: a.date,
-	// 				endDate: a.date,
-	// 				studentId: a.studentId,
-	// 			})),
-	// 		});
-	// 	} catch (error: any) {
-	// 		// handle error
-	// 		throw new TRPCError({
-	// 			message: error,
-	// 			code: "INTERNAL_SERVER_ERROR",
-	// 		});
-	// 	}
-	// }),
 	getAttendanceByStudent: protectedProcedure
 		.input(
 			z.object({
