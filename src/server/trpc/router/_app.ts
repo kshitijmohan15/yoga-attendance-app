@@ -1,4 +1,5 @@
 import { router } from "../trpc";
+import { analyticsRouter } from "./analytics";
 import { attendanceRouter } from "./attendance";
 import { authRouter } from "./auth";
 import { batchRouter } from "./batch";
@@ -11,6 +12,7 @@ export const appRouter = router({
 	student: studentRouter,
 	batch: batchRouter,
 	attendance: attendanceRouter,
+	analytics: analyticsRouter,
 });
 
 // export type definition of API

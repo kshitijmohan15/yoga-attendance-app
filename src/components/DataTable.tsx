@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
-import { Batch, Student } from "@prisma/client";
+import { type Batch, type Student } from "@prisma/client";
 import Link from "next/link";
 import { BsTrashFill } from "react-icons/bs";
 import { FiEdit2 } from "react-icons/fi";
@@ -12,7 +12,6 @@ import {
 	TooltipTrigger,
 } from "./Tooltip";
 import dayjs from "dayjs";
-import { useGetFromStore } from "@/hooks/zustandHooks";
 import { usePageStore } from "@/store/usePageNo";
 
 dayjs.extend(isBetween);
