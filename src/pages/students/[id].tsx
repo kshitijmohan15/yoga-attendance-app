@@ -31,7 +31,8 @@ import ListItem from "../../components/ListItem";
 import { getSession } from "next-auth/react";
 import DeleteModal from "../../components/DeleteStudentModal";
 import { ListSkeletonBatches } from "../../components/ListSkeleton";
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import { updateAttendanceCache } from "helpers";
 const localizer = dayjsLocalizer(dayjs);
 const inter = Inter({
 	weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -124,7 +125,7 @@ const StudentDetails: FC = () => {
 	const onSubmit = (data: CreateBatchType) => {
 		createBatch({ ...data, studentId: router.query.id as string });
 	};
-
+	const queryClient = useQueryClient();
 	// to be edited will be passed to the
 	const [toBeEdited, setToBeEdited] = useState<string>("");
 	const [toBeDeleted, setToBeDeleted] = useState<string>("");
@@ -159,15 +160,6 @@ const StudentDetails: FC = () => {
 				{!studentIsLoading && student ? (
 					<div>
 						<h1 className="text-4xl">{student?.name}</h1>
-						{/* <div className="flex gap-2">
-							<p className="font-semibold text-gray-600">
-								{student?.email}
-							</p>
-							<span>•</span>
-							<p className="font-semibold text-gray-600">
-								{student?.phone}
-							</p>
-						</div> */}
 					</div>
 				) : (
 					""
@@ -367,6 +359,22 @@ const StudentDetails: FC = () => {
 					>
 						Go back
 					</Button>
+					{/* <Button
+						onClick={() =>
+							updateAttendanceCache({
+								client: queryClient,
+								variables: {
+									studentId: router.query.id as string,
+								},
+								data: {
+									startDate: new Date(),
+									endDate: new Date(),
+								},
+							})
+						}
+					>
+						Console
+					</Button> */}
 				</div>
 				<div className="flex w-full gap-4">
 					<Button onClick={() => setTab(0)}>Batches</Button>
@@ -451,7 +459,17 @@ const StudentDetails: FC = () => {
 					<div className="flex h-96 w-full flex-col gap-4 overflow-auto">
 						<Calendar
 							onSelectSlot={(data) => {
-								console.log(data);
+								// console.log(data);
+								updateAttendanceCache({
+									client: queryClient,
+									variables: {
+										studentId: router.query.id as string,
+									},
+									data: {
+										startDate: data.start,
+										endDate: data.end,
+									},
+								});
 								createAttendance({
 									endDate: data.end,
 									startDate: data.start,
