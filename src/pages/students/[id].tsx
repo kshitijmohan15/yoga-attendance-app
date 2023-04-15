@@ -53,8 +53,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 			},
 		};
 	}
-	const queryClient = new QueryClient();
-	queryClient.prefetchQuery(["student", context.params.id]);
+	// const queryClient = new QueryClient();
+	// queryClient.prefetchQuery(["student", context?.params.id]);
 	return {
 		props: { session },
 	};

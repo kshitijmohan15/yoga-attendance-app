@@ -16,13 +16,13 @@ function Index() {
 		<Layout title="Login">
 			<section className="flex h-full w-full items-center justify-center">
 				{!session ? (
-					<div className="mx-auto flex h-auto w-full max-w-xl flex-col rounded-xl bg-white dark:bg-primary-dark-600">
+					<div className="mx-auto flex h-auto w-full max-w-xl flex-col rounded-xl dark:bg-primary-dark-600">
 						<form
 							action=""
 							className="flex h-full w-full flex-col gap-3 px-8 py-12 text-xl font-semibold text-blue-600 dark:text-gray-200"
 						>
 							<div className="flex w-full justify-center">
-								<div>TRY LOGGING IN!</div>
+								<div>Try signing in with Google</div>
 							</div>
 						</form>
 					</div>
