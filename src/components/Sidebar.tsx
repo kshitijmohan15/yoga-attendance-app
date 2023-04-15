@@ -60,36 +60,39 @@ const Sidebar = ({
 				</p>
 			</div>
 			<div className="mt-6 flex w-full flex-col items-center justify-start space-y-3 p-6 ">
-				<SidebarButton className="flex w-full items-center justify-start ">
-					<Link className="flex space-x-6 " href={"/dashboard"}>
+				<Link
+					className="flex w-full items-center justify-start  "
+					href={"/dashboard"}
+				>
+					<SidebarButton className="flex w-full items-center justify-start space-x-6 ">
 						<RxDashboard />
 						<p className="text-lg font-normal leading-4  ">
 							Dashboard
 						</p>
-					</Link>
-				</SidebarButton>
-				<SidebarButton className="flex w-full items-center justify-start space-x-6 ">
-					<Link
-						className="flex w-full items-center justify-start space-x-6"
-						href={"/students"}
-					>
+					</SidebarButton>
+				</Link>
+				<Link
+					className="flex w-full items-center justify-start space-x-6"
+					href={"/students"}
+				>
+					<SidebarButton className="flex w-full items-center justify-start space-x-6 ">
 						<FaUsers />
 						<p className="text-lg font-normal leading-4">
 							Students
 						</p>
-					</Link>
-				</SidebarButton>
-				<SidebarButton className="flex w-full items-center justify-start space-x-6 ">
-					<Link
-						className="flex w-full items-center justify-start space-x-6"
-						href={"/csv"}
-					>
+					</SidebarButton>
+				</Link>
+				<Link
+					className="flex w-full items-center justify-start space-x-6"
+					href={"/csv"}
+				>
+					<SidebarButton className="flex w-full items-center justify-start space-x-6 ">
 						<SiZoom fontSize={25} />
 						<p className="text-lg font-normal leading-4">
 							Upload Zoom Report
 						</p>
-					</Link>
-				</SidebarButton>
+					</SidebarButton>
+				</Link>
 			</div>
 		</motion.div>
 	);

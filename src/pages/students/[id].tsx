@@ -10,7 +10,6 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { RxTrash, RxPencil1 } from "react-icons/rx";
 import "react-datepicker/dist/react-datepicker.css";
 import { Inter } from "@next/font/google";
-
 import {
 	Dialog,
 	DialogContent,
@@ -34,10 +33,9 @@ import { ListSkeletonBatches } from "../../components/ListSkeleton";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { deleteAttendanceCache, updateAttendanceCache } from "helpers";
 import { GetServerSidePropsContext } from "next";
+import { Divider } from "@mui/material";
 const localizer = dayjsLocalizer(dayjs);
-const inter = Inter({
-	weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-});
+
 function formatAsDate(date: Date) {
 	return dayjs(date).format("DD MMM YYYY");
 }
@@ -360,27 +358,26 @@ const StudentDetails: FC = () => {
 					>
 						Go back
 					</Button>
-					{/* <Button
-						onClick={() =>
-							updateAttendanceCache({
-								client: queryClient,
-								variables: {
-									studentId: router.query.id as string,
-								},
-								data: {
-									startDate: new Date(),
-									endDate: new Date(),
-								},
-							})
-						}
-					>
-						Console
-					</Button> */}
 				</div>
 				<div className="flex w-full gap-4">
-					<Button onClick={() => setTab(0)}>Batches</Button>
-					<Button onClick={() => setTab(1)}>Calendar</Button>
+					<div className="flex flex-col items-center gap-1">
+						<Button onClick={() => setTab(0)}>Batches</Button>
+						{tab === 0 ? (
+							<div className="h-1 w-1/3 rounded-full bg-gray-600"></div>
+						) : (
+							<div className="h-1 w-1/3 rounded-full "></div>
+						)}
+					</div>
+					<div className="flex flex-col items-center gap-1">
+						<Button onClick={() => setTab(1)}>Calendar</Button>
+						{tab === 1 ? (
+							<div className="h-1 w-1/3 rounded-full bg-gray-600"></div>
+						) : (
+							<div className="h-1 w-1/3 rounded-full "></div>
+						)}
+					</div>
 				</div>
+				<Divider />
 				{tab === 0 && (
 					<div className="flex h-96 w-full flex-col gap-4 overflow-auto">
 						{batchesAreLoading ? <ListSkeletonBatches /> : null}
