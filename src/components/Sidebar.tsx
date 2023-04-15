@@ -1,6 +1,7 @@
 import React from "react";
 import { RxDashboard } from "react-icons/rx";
 import { FaUsers } from "react-icons/fa";
+import { SiZoom } from "react-icons/si";
 import { motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import { Button } from "./Button";
@@ -75,6 +76,17 @@ const Sidebar = ({
 						<FaUsers />
 						<p className="text-lg font-normal leading-4">
 							Students
+						</p>
+					</Link>
+				</SidebarButton>
+				<SidebarButton className="flex w-full items-center justify-start space-x-6 ">
+					<Link
+						className="flex w-full items-center justify-start space-x-6"
+						href={"/csv"}
+					>
+						<SiZoom fontSize={25} />
+						<p className="text-lg font-normal leading-4">
+							Upload Zoom Report
 						</p>
 					</Link>
 				</SidebarButton>

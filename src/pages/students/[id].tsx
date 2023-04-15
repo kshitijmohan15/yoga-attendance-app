@@ -33,6 +33,7 @@ import DeleteModal from "../../components/DeleteStudentModal";
 import { ListSkeletonBatches } from "../../components/ListSkeleton";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { deleteAttendanceCache, updateAttendanceCache } from "helpers";
+import { GetServerSidePropsContext } from "next";
 const localizer = dayjsLocalizer(dayjs);
 const inter = Inter({
 	weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -41,7 +42,7 @@ function formatAsDate(date: Date) {
 	return dayjs(date).format("DD MMM YYYY");
 }
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
 	const session = await getSession(context);
 
 	if (!session) {
