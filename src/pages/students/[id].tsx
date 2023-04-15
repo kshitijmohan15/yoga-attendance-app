@@ -32,7 +32,7 @@ import { getSession } from "next-auth/react";
 import DeleteModal from "../../components/DeleteStudentModal";
 import { ListSkeletonBatches } from "../../components/ListSkeleton";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
-import { updateAttendanceCache } from "helpers";
+import { deleteAttendanceCache, updateAttendanceCache } from "helpers";
 const localizer = dayjsLocalizer(dayjs);
 const inter = Inter({
 	weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -477,6 +477,16 @@ const StudentDetails: FC = () => {
 								});
 							}}
 							onSelectEvent={(data) => {
+								deleteAttendanceCache({
+									client: queryClient,
+									variables: {
+										studentId: router.query.id as string,
+									},
+									data: {
+										startDate: data.start as Date,
+										endDate: data.end as Date,
+									},
+								});
 								deleteAttendance({
 									studentId: router.query.id as string,
 									startDate: data.start as Date,

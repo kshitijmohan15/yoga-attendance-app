@@ -39,3 +39,34 @@ export function updateAttendanceCache({
 		}
 	);
 }
+export const deleteAttendanceCache = ({
+	client,
+	variables,
+	data,
+}: {
+	client: QueryClient;
+	variables: { studentId: string };
+	data: { startDate: Date; endDate: Date };
+}) => {
+	client.setQueryData(
+		[
+			["attendance", "getAttendanceByStudent"],
+			{
+				input: {
+					studentId: variables.studentId,
+				},
+				type: "query",
+			},
+		],
+		(oldData: any) => {
+			let newData =
+				oldData as RouterOutputs["attendance"]["getAttendanceByStudent"];
+			newData.attendance = newData.attendance.filter(
+				(attendance: any) =>
+					attendance.startDate !== data.startDate &&
+					attendance.endDate !== data.endDate
+			);
+			return newData;
+		}
+	);
+};
