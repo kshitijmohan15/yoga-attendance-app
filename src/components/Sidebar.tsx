@@ -5,7 +5,7 @@ import { SiZoom } from "react-icons/si";
 import { motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import { Button } from "./Button";
-import { Inter } from "@next/font/google";
+import { Inter, Poppins } from "@next/font/google";
 import Link from "next/link";
 
 const SidebarButton = ({
@@ -45,18 +45,18 @@ const Sidebar = ({
 			exit={{ opacity: 0 }}
 			id="Sidebar"
 			className={twMerge(
-				" sticky top-0 left-0 hidden h-screen w-full transform flex-col items-start justify-start bg-transparent transition duration-500 ease-in-out sm:w-80 md:flex xl:translate-x-0 xl:rounded-r",
+				"sticky top-2 left-0 hidden h-screen w-full transform flex-col items-center justify-start bg-transparent px-2 py-2 transition duration-500 ease-in-out sm:w-80 md:flex xl:translate-x-0 xl:rounded-r",
 				SIDEBAR_DEFAULT_COLORS()
 			)}
 		>
-			<div className="items-center justify-between space-x-3 whitespace-nowrap px-6 py-4 xl:flex  ">
+			<div className="w-full items-center justify-start space-x-3 whitespace-nowrap px-6 py-4 xl:flex">
 				<p
 					className={
-						"w-full  text-3xl font-semibold leading-6" +
+						"w-full  text-3xl font-semibold leading-6 " +
 						inter.className
 					}
 				>
-					Yoga Attendance
+					Attendance
 				</p>
 			</div>
 			<div className="mt-6 flex w-full flex-col items-center justify-start space-y-3 p-6 ">

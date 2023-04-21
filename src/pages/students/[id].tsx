@@ -18,6 +18,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "../../components/Modal";
+import {motion} from "framer-motion"
 import { twMerge } from "tailwind-merge";
 import { useForm, Controller } from "react-hook-form";
 import { batchSchema } from "../../schema/batchSchema";
@@ -362,18 +363,14 @@ const StudentDetails: FC = () => {
 				<div className="flex w-full gap-4">
 					<div className="flex flex-col items-center gap-1">
 						<Button onClick={() => setTab(0)}>Batches</Button>
-						{tab === 0 ? (
-							<div className="h-1 w-1/3 rounded-full bg-gray-600"></div>
-						) : (
-							<div className="h-1 w-1/3 rounded-full "></div>
+						{tab === 0 && (
+							<motion.div layoutId="active-bar" className="h-1 w-1/3 rounded-full bg-gray-600"></motion.div>
 						)}
 					</div>
 					<div className="flex flex-col items-center gap-1">
 						<Button onClick={() => setTab(1)}>Calendar</Button>
-						{tab === 1 ? (
-							<div className="h-1 w-1/3 rounded-full bg-gray-600"></div>
-						) : (
-							<div className="h-1 w-1/3 rounded-full "></div>
+						{tab === 1 && (
+							<motion.div layoutId="active-bar" className="h-1 w-1/3 rounded-full bg-gray-600"></motion.div>
 						)}
 					</div>
 				</div>
