@@ -52,8 +52,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 			},
 		};
 	}
-	// const queryClient = new QueryClient();
-	// queryClient.prefetchQuery(["student", context?.params.id]);
 	return {
 		props: { session },
 	};
@@ -81,11 +79,7 @@ const StudentDetails: FC = () => {
 			reset();
 		},
 	});
-	const {
-		mutateAsync: editBatch,
-		isLoading: batchPatching,
-		isSuccess: batchPatched,
-	} = trpc.batch.editBatch.useMutation({
+	const { mutateAsync: editBatch } = trpc.batch.editBatch.useMutation({
 		onSuccess: () => {
 			utils.batch.invalidate();
 			console.log("UPDATED!");
@@ -193,10 +187,6 @@ const StudentDetails: FC = () => {
 								<DialogTitle>
 									Create a new batch for {student?.name}
 								</DialogTitle>
-								{/* <DialogDescription>
-										Use the form below to add a new student to
-										your class.
-									</DialogDescription> */}
 								<div className="flex flex-1">
 									<form
 										className=" flex-col gap-4 "
@@ -225,7 +215,9 @@ const StudentDetails: FC = () => {
 															dateFormat={
 																"dd/MM/yyyy"
 															}
-															selected={value}
+															selected={
+																value as Date
+															}
 															onChange={onChange}
 															customInput={
 																<Input className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm" />
@@ -264,7 +256,9 @@ const StudentDetails: FC = () => {
 															dateFormat={
 																"dd/MM/yyyy"
 															}
-															selected={value}
+															selected={
+																value as Date
+															}
 															onChange={onChange}
 															customInput={
 																<Input className="text-md w-full rounded-md py-2 px-2 font-normal text-primary-dark shadow-md focus:border-blue-400 focus:ring-0 dark:border-[1px] dark:border-primary-light-500/10 dark:bg-primary-dark-600 dark:text-primary-light-500 dark:shadow-sm" />
@@ -554,7 +548,7 @@ const StudentDetails: FC = () => {
 														watch().startDate &&
 														!value
 															? watch().startDate
-															: value
+															: (value as Date)
 													}
 													onChange={onChange}
 													customInput={
@@ -587,7 +581,7 @@ const StudentDetails: FC = () => {
 														watch().endDate &&
 														!value
 															? watch().endDate
-															: value
+															: (value as Date)
 													}
 													onChange={onChange}
 													customInput={
