@@ -56,7 +56,7 @@ const Sidebar = ({
 						inter.className
 					}
 				>
-					Attendance
+					Upastithi
 				</p>
 			</div>
 			<div className="mt-6 flex w-full flex-col items-center justify-start space-y-3 p-6 ">
