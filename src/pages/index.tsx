@@ -23,10 +23,10 @@ const Home: NextPage = () => {
 	return (
 		<>
 			<Head>
-				<title>AccomoMumbai</title>
+				<title>Upastithi</title>
 				<meta
 					name="description"
-					content="Living accommodation for students in Mumbai."
+					content="Manage your attendance with ease."
 				/>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
