@@ -189,7 +189,7 @@ const StudentDetails: FC = () => {
 								</DialogTitle>
 								<div className="flex flex-1">
 									<form
-										className=" flex-col gap-4 "
+									className=" flex-col gap-4 "
 										onSubmit={handleSubmit(onSubmit)}
 									>
 										<div className="grid grid-cols-2 gap-4">
