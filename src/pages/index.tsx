@@ -3,18 +3,21 @@ import Head from "next/head";
 import Lottie from "react-lottie";
 import animationData from "../lotties/calendar.json";
 import { BsArrowRight } from "react-icons/bs";
-import { motion } from "framer-motion";
 import { useState } from "react";
 import { z } from "zod";
-import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
-import { toast } from "react-toastify";
-import ThemeToggle from "@/components/ThemeToggleButton";
 import Link from "next/link";
-import { FaGoogle, FaUsers } from "react-icons/fa";
-import { getSession, signIn, signOut, useSession } from "next-auth/react";
+import { FaGoogle } from "react-icons/fa";
+import { signIn, signOut, useSession } from "next-auth/react";
 import AvatarHovered from "@/components/AvatarHovered";
-import { getServerAuthSession } from "@/server/common/get-server-auth-session";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/Dropdown";
 
 const emailValidation = z.string().email();
 
@@ -48,22 +51,35 @@ const Home: NextPage = () => {
 						{!session ? (
 							<>
 								<FaGoogle />
-								<div>SIGN IN WITH GOOGLE</div>
+								<div>SIGN IN</div>
 							</>
 						) : (
 							<div>SIGN OUT</div>
 						)}
 					</Button>
 					{session?.user?.image && (
-						<AvatarHovered
-							user={session.user}
-							imgURL={session.user.image}
-						/>
+						<DropdownMenu>
+							<DropdownMenuTrigger>
+								<AvatarHovered
+									user={session.user}
+									imgURL={session.user.image}
+								/>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent className="bg-gray-100">
+								<DropdownMenuLabel>
+									My Account
+								</DropdownMenuLabel>
+								<DropdownMenuSeparator />
+								<DropdownMenuItem>
+									<Link href={"/students"}>Student</Link>
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
 					)}
 				</ul>
 			</nav>
 			<main className="flex min-h-full w-full bg-primary-light-500">
-				<section className="h-screen flex items-start px-4 lg:items-center lg:px-10">
+				<section className="flex h-screen items-start px-4 lg:items-center lg:px-10">
 					<div className="flex flex-col justify-between lg:flex-row">
 						<div className="mt-24 flex w-full flex-col gap-2 lg:w-3/4">
 							<h1 className="text-left text-3xl font-semibold text-gray-700 lg:text-5xl">
@@ -117,14 +133,16 @@ const Home: NextPage = () => {
 									</Button>
 								</motion.div>
 							</div> */}
-							<div className="mt-4">
-								<Link href="/students" className="flex">
-									<Button className="items-center gap-2 flex">
-										<p>Go To Students</p>
-										<BsArrowRight />
-									</Button>
-								</Link>
-							</div>
+							{session && (
+								<div className="mt-4">
+									<Link href="/students" className="flex">
+										<Button className="flex items-center gap-2">
+											<p>Go To Students</p>
+											<BsArrowRight />
+										</Button>
+									</Link>
+								</div>
+							)}
 						</div>
 						<div className="hidden lg:block">
 							<Lottie
@@ -150,15 +168,15 @@ const Home: NextPage = () => {
 export default Home;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-	const session = await getSession(context);
-	if (session) {
-		return {
-			redirect: {
-				destination: "/students",
-			},
-		};
-	}
+	// const session = await getSession(context);
+	// if (session) {
+	// 	return {
+	// 		redirect: {
+	// 			destination: "/students",
+	// 		},
+	// 	};
+	// }
 	return {
 		props: {},
-	}
+	};
 }

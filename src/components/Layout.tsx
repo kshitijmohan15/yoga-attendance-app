@@ -10,6 +10,14 @@ import AvatarHovered from "./AvatarHovered";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Sidebar from "./Sidebar";
 import Link from "next/link";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/Dropdown";
 
 type Props = {
 	children: React.ReactNode;
@@ -37,15 +45,7 @@ const Layout: FC<Props> = ({ children, title }) => {
 				<div className=" flex h-full flex-1 flex-col items-center justify-center">
 					<nav className=" sticky left-0 top-0 z-10 flex w-full items-center justify-between px-6 py-4 backdrop-blur-md">
 						<ThemeToggle />
-						<ul>
-							<Link
-								href="/students"
-								className="flex items-center gap-2 rounded-md px-2 py-1 shadow-sm md:hidden"
-							>
-								<FaUsers />
-								Students
-							</Link>
-						</ul>
+
 						<ul className="flex items-center justify-center gap-4 text-primary-dark-500 dark:text-primary-light-500">
 							<Button
 								size={"sm"}
@@ -64,10 +64,25 @@ const Layout: FC<Props> = ({ children, title }) => {
 								)}
 							</Button>
 							{session?.user?.image && (
-								<AvatarHovered
-									user={session.user}
-									imgURL={session.user.image}
-								/>
+								<DropdownMenu>
+									<DropdownMenuTrigger>
+										<AvatarHovered
+											user={session.user}
+											imgURL={session.user.image}
+										/>
+									</DropdownMenuTrigger>
+									<DropdownMenuContent className="bg-gray-100">
+										<DropdownMenuLabel>
+											My Account
+										</DropdownMenuLabel>
+										<DropdownMenuSeparator />
+										<DropdownMenuItem>
+											<Link href={"/students"}>
+												Student
+											</Link>
+										</DropdownMenuItem>
+									</DropdownMenuContent>
+								</DropdownMenu>
 							)}
 						</ul>
 					</nav>
