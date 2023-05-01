@@ -64,7 +64,7 @@ const Home: NextPage = () => {
 								Welcome to Upastithi.
 							</h1>
 							<p className="text-left text-lg font-normal text-gray-300 lg:text-xl">
-							The perfect solution for businesses and organizations of all sizes to easily manage attendance and streamline their workflows. With our app, you can say goodbye to time-consuming manual attendance registration and hello to a hassle-free, automated system that integrates seamlessly with Zoom.
+							The perfect tool to easily manage attendance and streamline their workflow. With our app, you can say goodbye to time-consuming manual attendance registration and hello to a hassle-free, automated system that integrates seamlessly with Zoom.
 							</p>
 							<div className="mt-4 flex flex-col gap-4 md:flex-row">
 								<Input
