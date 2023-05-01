@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import { FC, useState } from "react";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
@@ -9,11 +9,9 @@ import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { RxTrash, RxPencil1 } from "react-icons/rx";
 import "react-datepicker/dist/react-datepicker.css";
-import { Inter } from "@next/font/google";
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -31,7 +29,7 @@ import ListItem from "../../components/ListItem";
 import { getSession } from "next-auth/react";
 import DeleteModal from "../../components/DeleteStudentModal";
 import { ListSkeletonBatches } from "../../components/ListSkeleton";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { deleteAttendanceCache, updateAttendanceCache } from "helpers";
 import { GetServerSidePropsContext } from "next";
 import { Divider } from "@mui/material";
@@ -189,7 +187,7 @@ const StudentDetails: FC = () => {
 								</DialogTitle>
 								<div className="flex flex-1">
 									<form
-									className=" flex-col gap-4 "
+										className=" flex-col gap-4 "
 										onSubmit={handleSubmit(onSubmit)}
 									>
 										<div className="grid grid-cols-2 gap-4">
@@ -453,7 +451,7 @@ const StudentDetails: FC = () => {
 				{tab === 1 && (
 					<div className="flex h-96 w-full flex-col gap-4 overflow-auto">
 						<Calendar
-							eventPropGetter={(event) => {
+							eventPropGetter={() => {
 								return {
 									style: {
 										backgroundColor: creatingAttendance
@@ -463,7 +461,6 @@ const StudentDetails: FC = () => {
 								};
 							}}
 							onSelectSlot={(data) => {
-								// console.log(data);
 								updateAttendanceCache({
 									client: queryClient,
 									variables: {

@@ -1,7 +1,7 @@
-import { type NextPage } from "next";
+import { GetServerSidePropsContext, type NextPage } from "next";
 import Head from "next/head";
 import Lottie from "react-lottie";
-import animationData from "../lotties/hero-lady.json";
+import animationData from "../lotties/calendar.json";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { z } from "zod";
@@ -11,8 +11,9 @@ import { toast } from "react-toastify";
 import ThemeToggle from "@/components/ThemeToggleButton";
 import Link from "next/link";
 import { FaGoogle, FaUsers } from "react-icons/fa";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { getSession, signIn, signOut, useSession } from "next-auth/react";
 import AvatarHovered from "@/components/AvatarHovered";
+import { getServerAuthSession } from "@/server/common/get-server-auth-session";
 
 const emailValidation = z.string().email();
 
@@ -37,7 +38,11 @@ const Home: NextPage = () => {
 					<Button
 						size={"sm"}
 						className=" flex items-center justify-center gap-2 font-semibold"
-						onClick={() => (session ? signOut() : signIn("google",{callbackUrl: "/students"}))}
+						onClick={() =>
+							session
+								? signOut()
+								: signIn("google", { callbackUrl: "/students" })
+						}
 					>
 						{!session ? (
 							<>
@@ -58,8 +63,8 @@ const Home: NextPage = () => {
 			</nav>
 			<main className="flex min-h-full w-full">
 				<section className="h-scrFeen flex items-start px-4 lg:items-center lg:px-10">
-					<div className="flex flex-col lg:flex-row">
-						<div className="mt-24 flex w-full flex-col gap-2">
+					<div className="flex flex-col lg:flex-row justify-between">
+						<div className="mt-24 flex w-full flex-col gap-2 lg:w-3/4">
 							<h1 className="text-left text-3xl font-semibold text-white lg:text-5xl">
 								Welcome to Upastithi.
 							</h1>
@@ -71,7 +76,7 @@ const Home: NextPage = () => {
 								automated system that integrates seamlessly with
 								Zoom.
 							</p>
-							<div className="mt-4 flex flex-col gap-4 md:flex-row">
+							{/* <div className="mt-4 flex flex-col gap-4 md:flex-row">
 								<Input
 									onChange={(event) =>
 										setEmail(event.target.value)
@@ -110,7 +115,7 @@ const Home: NextPage = () => {
 											: "Join the waitlist"}
 									</Button>
 								</motion.div>
-							</div>
+							</div> */}
 						</div>
 						<div className="hidden lg:block">
 							<Lottie
@@ -122,8 +127,8 @@ const Home: NextPage = () => {
 										preserveAspectRatio: "xMidYMid slice",
 									},
 								}}
-								height={400}
-								width={350}
+								height={500}
+								width={500}
 							/>
 						</div>
 					</div>
@@ -135,11 +140,13 @@ const Home: NextPage = () => {
 
 export default Home;
 
-// export function getServerSideProps() {
-// 	return {
-// 		// const session = await getSession({ req });
-// 		redirect: {
-// 			destination: "/students",
-// 		},
-// 	};
-// }
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+	const session = await getSession(context);
+	if (session) {
+		return {
+			redirect: {
+				destination: "/students",
+			},
+		};
+	}
+}
