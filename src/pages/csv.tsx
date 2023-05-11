@@ -9,6 +9,14 @@ import { BsTrashFill } from "react-icons/bs";
 import { AiTwotonePlusSquare } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { Button } from "@/components/Button";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+} from "@/components/Select";
+import { debounce } from "lodash";
 
 function capitalize(string: string) {
 	return string?.charAt(0).toUpperCase() + string?.slice(1) ?? "";
@@ -17,11 +25,15 @@ interface Participant {
 	name: string;
 	startDate: Date;
 	endDate: Date;
+	joinDate: Dayjs;
+	joinTime: Dayjs;
 }
 function UploadCsv() {
 	const [file, setFile] = useState();
 	const [participants, setParticipants] = useState<Participant[]>([]);
 	const [participantsLoaded, setParticipantsLoaded] = useState(false);
+
+	// mutations
 	const { mutateAsync: getStudentsInDb, data: studentsInDb } =
 		trpc.student.getStudentsAlreadyInDb.useMutation();
 	const { mutateAsync: uploadCsv } = trpc.attendance.uploadCsv.useMutation({
@@ -43,6 +55,7 @@ function UploadCsv() {
 			});
 		}
 	}, [participantsLoaded]);
+	const { data: allStudents } = trpc.student.getStudents.useQuery();
 	const handleSubmit = useCallback(() => {
 		if (file) {
 			const fileUrl = URL.createObjectURL(file);
@@ -118,6 +131,7 @@ function UploadCsv() {
 			console.error("Please select a file");
 		}
 	}, [file]);
+	const [trackName, setTrackName] = useState<string>("");
 	function roundToNearestHalfHour(date: Dayjs) {
 		return date.minute(Math.round(date.minute() / 30) * 30).second(0);
 	}
@@ -132,7 +146,7 @@ function UploadCsv() {
 
 		return hours;
 	}
-	function updateParticipants(name: string, newStartTime: string) {
+	function updateParticipantsJoinTime(name: string, newStartTime: string) {
 		setParticipants((participants: any) =>
 			participants.map((participant: any) => {
 				if (participant.name === name) {
@@ -143,8 +157,26 @@ function UploadCsv() {
 			})
 		);
 	}
+	function updateParticipantsName({
+		name,
+		newName,
+	}: {
+		name: string;
+		newName: string;
+	}) {
+		console.log({ newName, name });
+		setParticipants((participants) =>
+			participants.map((participant) => {
+				if (participant.name === name) {
+					return { ...participant, name: newName };
+				} else {
+					return participant;
+				}
+			})
+		);
+	}
 	useEffect(() => {
-		console.log(participants);
+		console.log("your participants", participants);
 	});
 	function uniqueParticipants(list: any) {
 		const uniqueParticipants = list.filter(
@@ -161,7 +193,11 @@ function UploadCsv() {
 		);
 		return uniqueParticipants;
 	}
-
+	const [dropdownSearch, setDropdownSearch] = useState<string>("");
+	const handleSearch = (e: any) => {
+		setDropdownSearch(e.target.value);
+	};
+	const debouncedHandleSearch = useCallback(debounce(handleSearch, 300), []);
 	return (
 		<Layout title="Upload Zoom Attendance">
 			<div className="flex flex-col gap-4 text-black">
@@ -209,7 +245,7 @@ function UploadCsv() {
 					</div>
 				)}
 				<table className="w-1/2">
-					{participants.map((item: any, index: number) => (
+					{participants.map((item, index: number) => (
 						<tr
 							key={index}
 							className="flex w-full justify-between gap-10"
@@ -229,18 +265,70 @@ function UploadCsv() {
 										: "bg-red-200 text-red-700")
 								}`}
 							>
-								{item.name}
+								<Select
+									onValueChange={(value) =>
+										updateParticipantsName({
+											name: trackName,
+											newName: value,
+										})
+									}
+									onOpenChange={() => {
+										setDropdownSearch("");
+										setTrackName(item.name);
+									}}
+								>
+									<SelectTrigger className="w-full">
+										{/* <SelectValue
+											placeholder={`${item.name}`}
+										/> */}
+										{item.name}
+									</SelectTrigger>
+									<SelectContent className="scrollbar-hide h-96 w-full overflow-scroll bg-white">
+										<SelectGroup>
+											{allStudents?.students
+												?.sort(function (a, b) {
+													if (a.name < b.name) {
+														return -1;
+													}
+													if (a.name > b.name) {
+														return 1;
+													}
+													return 0;
+												})
+												.filter((student) =>
+													student.name
+														.toLowerCase()
+														.includes(
+															dropdownSearch.toLowerCase()
+														)
+												)
+												.map((student) => (
+													<div
+														key={student.id}
+														className="w-full flex-1 cursor-pointer"
+													>
+														<SelectItem
+															value={student.name}
+															className="cursor-pointer"
+														>
+															{student.name}
+														</SelectItem>
+													</div>
+												))}
+										</SelectGroup>
+									</SelectContent>
+								</Select>
 							</td>
 							<td>
 								<Listbox>
 									<Listbox.Button>
-										{item.joinTime}
+										{item.joinTime.toString()}
 									</Listbox.Button>
 									<Listbox.Options className="absolute bg-slate-600">
 										{generateHourList().map((hour) => (
 											<Listbox.Option
 												onClick={() =>
-													updateParticipants(
+													updateParticipantsJoinTime(
 														item.name,
 														hour
 													)
@@ -254,7 +342,7 @@ function UploadCsv() {
 									</Listbox.Options>
 								</Listbox>
 							</td>
-							<td>{item.joinDate}</td>
+							<td>{item.joinDate.toString()}</td>
 							<td
 								onClick={() =>
 									setParticipants((past) =>

@@ -122,9 +122,7 @@ const CreateStudent = () => {
 	const handleSearch = (e: any) => {
 		setSearchTerm(e.target.value);
 	};
-	const router = useRouter();
 	const debouncedHandleSearch = useCallback(debounce(handleSearch, 300), []);
-	const pageNo = usePageStore((state) => state.pageNo);
 	return (
 		<Layout title="Create Student">
 			<section className="flex flex-col justify-start">
