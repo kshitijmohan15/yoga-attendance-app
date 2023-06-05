@@ -33,6 +33,13 @@ const Home: NextPage = () => {
 			<NextSeo
 				title="Upastithi - Digital Attendance Management for Online Educators and Teachers"
 				description="Streamline your attendance management workflow with Upastithi. Easily upload Zoom attendance, and we will take care of the rest. Seamlessly monitor students batches and their payment status with our intuitive dashboard. Simplify attendance tracking and enhance productivity with our powerful attendance management system."
+				openGraph={{
+					url: "https://upastithi.com/",
+					title: "Upastithi - Attendance Management for Online Educators",
+					description:
+						"Manage your attendance with ease. Upload Zoom reports and we will take care of the rest. More integrations coming soon.",
+					type: "website",
+				}}
 			/>
 			<nav className="sticky left-0 top-0 z-10 flex w-full items-center justify-between px-6 py-4 backdrop-blur-md">
 				{/* <ThemeToggle /> */}
