@@ -16,26 +16,29 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/Dropdown";
-
+import { NextSeo } from "next-seo";
 
 const Home: NextPage = () => {
 	const { data: session } = useSession();
 	return (
 		<>
-			<Head>
+			{/* <Head>
 				<title>Upastithi</title>
 				<meta
 					name="description"
 					content="Manage your attendance with ease."
 				/>
 				<link rel="icon" href="/favicon.ico" />
-			</Head>
+			</Head> */}
+			<NextSeo
+				title="Upastithi - Digital Attendance Management for Online Educators and Teachers"
+				description="Streamline your attendance management workflow with Upastithi. Easily upload Zoom attendance, and we will take care of the rest. Seamlessly monitor students batches and their payment status with our intuitive dashboard. Simplify attendance tracking and enhance productivity with our powerful attendance management system."
+			/>
 			<nav className="sticky left-0 top-0 z-10 flex w-full items-center justify-between px-6 py-4 backdrop-blur-md">
 				{/* <ThemeToggle /> */}
 
 				<ul className="flex items-center justify-center gap-4 text-primary-dark-500 dark:text-primary-light-500">
 					<Button
-            
 						size={"sm"}
 						className=" flex items-center justify-center gap-2 font-semibold"
 						onClick={() =>
@@ -89,7 +92,7 @@ const Home: NextPage = () => {
 								automated system that integrates seamlessly with
 								Zoom.
 							</p>
-							
+
 							{session && (
 								<div className="mt-4">
 									<Link href="/students" className="flex">
