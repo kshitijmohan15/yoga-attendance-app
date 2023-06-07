@@ -89,7 +89,7 @@ export default function DataTable({
 						}
 					>
 						<Link
-							className="flex h-full flex-1 items-center font-medium hover:text-blue-700"
+							className="flex h-full flex-1 items-center font-medium transition-all duration-300 hover:text-blue-700"
 							href={`/students/${params.id}`}
 						>
 							{params.value}
