@@ -40,7 +40,7 @@ export const analyticsRouter = router({
 			});
 
 			const finalStudents: { count: number; name: string }[] = [];
-			for (let attendance of attendances) {
+			for (const attendance of attendances) {
 				const student = students.find(
 					(student) => student.id === attendance.studentId
 				);

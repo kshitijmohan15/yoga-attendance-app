@@ -11,7 +11,7 @@ const Dashboard = () => {
 			<div className="flex flex-col gap-10 ">
 				<div className="w-full flex flex-col items-center">
 					<div className="flex flex-col items-start w-[70%]">
-						<h1>Most Frequent Attendants In The Last 30 Days</h1>
+						<h1 className="text-xl">Most Frequent Attendants In The Last 30 Days</h1>
 						{isLoading ? (
 							<Skeleton className="h-48 bg-gray-400" />
 						) : (
