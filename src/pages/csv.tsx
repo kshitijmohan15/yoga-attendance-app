@@ -68,9 +68,11 @@ function UploadCsv() {
 					if (rows[0]) {
 						const headers = rows[0].split(",");
 						const data = rows.slice(1).map((row) => {
-							const values = row.split(",");
+						const values = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)(?=(?:(?:[^']*'){2})*[^']*$)/);
+							// const values = row.split(",");
 							const el = headers.reduce(
 								(object, header, index) => {
+								// console.log("headers", {object, header, index})
 									return {
 										...object,
 										[header]: values[index],
@@ -84,10 +86,14 @@ function UploadCsv() {
 							uniqueParticipants(
 								data
 									.map((item: any) => {
+										// const name = capitalize(
+										// 	item["Name (Original Name)"]
+										// ).replace(",", "");
+										// console.log("namename",name);
 										return {
 											name: capitalize(
 												item["Name (Original Name)"]
-											),
+											).replaceAll('"', ""),
 											joinTime: roundToNearestHalfHour(
 												dayjs(
 													item["Join Time"],
@@ -251,19 +257,16 @@ function UploadCsv() {
 							className="flex w-full justify-between gap-10"
 						>
 							<td
-								className={`w-52 ${
-									index === 0 ? "rounded-t-md" : ""
-								} ${
-									index === participants.length - 1 &&
+								className={`w-52 ${index === 0 ? "rounded-t-md" : ""
+									} ${index === participants.length - 1 &&
 									"rounded-b-md "
-								} p-2 font-semibold ${
-									studentsInDb &&
+									} p-2 font-semibold ${studentsInDb &&
 									(studentsInDb.students.some(
 										(student) => student.name === item.name
 									)
 										? "bg-green-200 text-green-700"
 										: "bg-red-200 text-red-700")
-								}`}
+									}`}
 							>
 								<Select
 									onValueChange={(value) =>
@@ -286,7 +289,7 @@ function UploadCsv() {
 									<SelectContent className="scrollbar-hide h-96 w-full overflow-scroll bg-white">
 										<SelectGroup>
 											{allStudents?.students
-												?.sort(function (a, b) {
+												?.sort(function(a, b) {
 													if (a.name < b.name) {
 														return -1;
 													}
