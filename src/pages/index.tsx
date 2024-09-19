@@ -16,6 +16,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/Dropdown";
+import { motion } from "framer-motion";
 import { NextSeo } from "next-seo";
 
 const Home: NextPage = () => {
@@ -44,7 +45,7 @@ const Home: NextPage = () => {
 			<nav className="sticky left-0 top-0 z-10 flex w-full items-center justify-between px-6 py-4 backdrop-blur-md">
 				{/* <ThemeToggle /> */}
 
-				<ul className="flex items-center justify-center gap-4 text-primary-dark-500 dark:text-primary-light-500">
+				<ul className="text-primary-dark-500 dark:text-primary-light-500 flex items-center justify-center gap-4">
 					<Button
 						size={"sm"}
 						className=" flex items-center justify-center gap-2 font-semibold"
@@ -84,7 +85,7 @@ const Home: NextPage = () => {
 					)}
 				</ul>
 			</nav>
-			<main className="flex min-h-full w-full bg-primary-light-500">
+			<main className="bg-primary-light-500 flex min-h-full w-full">
 				<section className="flex h-screen items-start px-4 lg:items-center lg:px-10">
 					<div className="flex flex-col justify-between lg:flex-row">
 						<div className="mt-24 flex w-full flex-col gap-2 lg:w-3/4">
@@ -99,13 +100,18 @@ const Home: NextPage = () => {
 								automated system that integrates seamlessly with
 								Zoom.
 							</p>
-
 							{session && (
 								<div className="mt-4">
-									<Link href="/students" className="flex">
-										<Button className="flex items-center gap-2">
-											<p>Go To Students</p>
-											<BsArrowRight />
+									<Link
+										href="/students"
+										className="group relative flex w-fit"
+									>
+										<motion.div className="absolute inset-0 z-10 m-0 rounded-lg bg-gray-300 transition-all duration-100 ease-in group-hover:-m-[3px]"></motion.div>
+										<Button className="z-20">
+											<div className="flex items-center gap-2">
+												<p>Go To Students</p>
+												<BsArrowRight />
+											</div>
 										</Button>
 									</Link>
 								</div>

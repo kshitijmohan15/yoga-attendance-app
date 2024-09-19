@@ -82,32 +82,43 @@ function UploadCsv() {
 						});
 						setParticipants(
 							uniqueParticipants(
-								data
+								data.
+								map(
+									// turn keys into lower case
+									(item:any) => {
+										const newItem: any = {};
+										Object.keys(item).forEach((key) => {
+											newItem[key.toLowerCase()] =
+												item[key];
+										});
+										return newItem;
+									}
+								)
 									.map((item: any) => {
 										return {
 											name: capitalize(
-												item["Name (Original Name)"]
+												item["Name (Original Name)".toLowerCase()]
 											),
 											joinTime: roundToNearestHalfHour(
 												dayjs(
-													item["Join Time"],
+													item["Join Time".toLowerCase()],
 													DATE_FORMAT_ZOOM
 												)
 											).format("h:mm A"),
 											joinDate: dayjs(
-												item["Join Time"],
+												item["Join Time".toLowerCase()],
 												DATE_FORMAT_ZOOM
 											).format("DD/MM/YYYY"),
 											startDate: dayjs(
-												item["Join Time"],
+												item["Join Time".toLowerCase()],
 												DATE_FORMAT_ZOOM
 											).toDate(),
 											endDate: dayjs(
-												item["Leave Time"],
+												item["Leave Time".toLowerCase()],
 												DATE_FORMAT_ZOOM
 											).toDate(),
 											date: dayjs(
-												item["Join Time"],
+												item["Join Time".toLowerCase()],
 												DATE_FORMAT_ZOOM
 											).toDate(),
 										};
@@ -197,7 +208,7 @@ function UploadCsv() {
 	const handleSearch = (e: any) => {
 		setDropdownSearch(e.target.value);
 	};
-	const debouncedHandleSearch = useCallback(debounce(handleSearch, 300), []);
+	console.log("studentsInDb", studentsInDb);
 	return (
 		<Layout title="Upload Zoom Attendance">
 			<div className="flex flex-col gap-4 text-black">
