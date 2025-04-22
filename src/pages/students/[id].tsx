@@ -374,7 +374,7 @@ const StudentDetails: FC = () => {
 				</div>
 				<Divider />
 				{tab === 0 && (
-					<div className="flex h-96 w-full flex-col gap-4 overflow-auto">
+					<div className="flex h-full w-full flex-col gap-4 overflow-auto">
 						{batchesAreLoading ? <ListSkeletonBatches /> : null}
 						{batches && batches.length === 0 && (
 							<ListItem intent={"default"}>
@@ -392,7 +392,7 @@ const StudentDetails: FC = () => {
 											? "paid"
 											: "unpaid"
 									}
-									classNames="items-center"
+									classNames="items-center p-4 h-[6rem]"
 								>
 									<div className="flex flex-col items-baseline gap-2 sm:flex-row ">
 										<div className="text-sm font-semibold md:text-lg lg:text-xl">

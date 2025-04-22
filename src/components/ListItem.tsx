@@ -58,7 +58,7 @@ const ListItem = ({
 	);
 };
 const listStyles = cva(
-	"flex h-28 flex-row group items-center overflow-hidden rounded-md relative flex-row transition duration-300 ease-in-out group",
+	"flex h-28 flex-row group items-center rounded-md relative flex-row transition duration-300 ease-in-out group",
 	{
 		variants: {
 			intent: {
